@@ -1,12 +1,14 @@
 package priv.kit.sample.debug
 
+import hyper_ui.*
+import priv.kit.sample.ui.*
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,7 +25,7 @@ internal fun PermissionsTestPage(
     state: PrivilegeSampleScreenState,
     callbacks: PrivilegeSampleDebugCallbacks,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     SamplePageScaffold(
         title = stringResource(R.string.sample_test_permissions),
         selectedDestination = PrivilegeSampleDebugDestination.Permissions,
@@ -33,7 +35,7 @@ internal fun PermissionsTestPage(
         actions = {},
     ) {
         StatusPanel(state, callbacks.connection.stopServer)
-        BasicText(
+        HyperText(
             text = stringResource(R.string.sample_denied_server_permissions) + (state.deniedPermissions?.let { " (${it.size})" } ?: ""),
             style = TextStyle(color = colors.onSurface, fontSize = 16.sp, fontWeight = FontWeight.SemiBold),
         )
@@ -47,7 +49,7 @@ internal fun PermissionsTestPage(
             else -> state.deniedPermissions.joinToString("\n")
         }
         SelectionContainer {
-            BasicText(
+            HyperText(
                 text = text,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -62,7 +64,7 @@ internal fun PermissionsTestPage(
                 ),
             )
         }
-        BasicText(
+        HyperText(
             text = stringResource(R.string.sample_permissions_description),
             style = TextStyle(color = colors.onSurfaceVariant, fontSize = 12.sp, lineHeight = 18.sp),
         )

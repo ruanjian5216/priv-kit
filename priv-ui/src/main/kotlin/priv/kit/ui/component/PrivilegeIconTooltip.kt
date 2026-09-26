@@ -1,33 +1,18 @@
 package priv.kit.ui.component
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.PlainTooltip
-import androidx.compose.material3.TooltipAnchorPosition
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import hyper_ui.HyperText
+import hyper_ui.HyperTooltip
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PrivilegeIconTooltip(
     text: String,
     modifier: Modifier,
     content: @Composable () -> Unit,
 ) {
-    TooltipBox(
+    HyperTooltip(
+        text = text,
         modifier = modifier,
-        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-            TooltipAnchorPosition.Above,
-        ),
-        tooltip = {
-            PlainTooltip {
-                HyperText(text)
-            }
-        },
-        state = rememberTooltipState(),
         content = content,
     )
 }

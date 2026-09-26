@@ -178,9 +178,9 @@ public object Privilege {
     /**
      * A device-side shell command that starts the native starter.
      *
-     * On Android 10 and later this command runs an uncompressed starter directly from an APK
-     * through the platform linker when no extracted file exists. On Android 8, 8.1, and 9 the
-     * host app must set `packaging.jniLibs.useLegacyPackaging = true`.
+     * On Android 11 (API 30) and later this command runs an uncompressed starter directly from an APK
+     * through the platform linker when no extracted file exists. The library targets Android 11
+     * (API 30) and later.
      *
      * The command is resolved on first access and cached for the lifetime of this process.
      * First access inspects the installed APKs and must run off the main thread.

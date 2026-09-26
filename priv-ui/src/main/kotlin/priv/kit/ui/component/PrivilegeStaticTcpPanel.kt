@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.TextButton
+import hyper_ui.HyperButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -55,7 +55,7 @@ internal fun PrivilegeUiScreenScope.TcpAuthorizationFailureDialog() {
         dismissOnClickOutside = false,
         title = stringResource(R.string.priv_ui_system_prompt_tcp_authorization_title),
         actionContent = {
-            TextButton(
+            HyperButton(
                 enabled = interactionEnabled,
                 onClick = actions.dismissTcpAuthorizationFailureDialog,
             ) {
@@ -90,7 +90,7 @@ internal fun PrivilegeUiScreenScope.StaticTcpSwitchConfirmationDialog(
             }
         },
         actionContent = {
-            TextButton(
+            HyperButton(
                 enabled = interactionEnabled,
                 onClick = actions.confirmStaticTcpSwitch,
             ) {
@@ -105,7 +105,7 @@ internal fun PrivilegeUiScreenScope.StaticTcpSwitchConfirmationDialog(
                     ),
                 )
             }
-            TextButton(
+            HyperButton(
                 enabled = interactionEnabled,
                 onClick = actions.cancelStaticTcpSwitch,
             ) {
@@ -308,17 +308,17 @@ private fun StaticTcpControlDialog(
             }
         },
         actionContent = {
-            TextButton(
+            HyperButton(
                 enabled = actionEnabled,
                 onClick = onRestart,
             ) {
                 HyperText(stringResource(R.string.priv_ui_adb_static_control_restart_action))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.extraSmall)) {
-                TextButton(onClick = onDismiss) {
+                HyperButton(onClick = onDismiss) {
                     HyperText(stringResource(R.string.priv_ui_adb_static_switch_cancel_action))
                 }
-                TextButton(
+                HyperButton(
                     enabled = actionEnabled,
                     onClick = onStop,
                 ) {

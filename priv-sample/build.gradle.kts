@@ -16,20 +16,6 @@ android {
         minSdk = 30
     }
 
-    flavorDimensions += "nativePackaging"
-
-    productFlavors {
-        create("legacy") {
-            dimension = "nativePackaging"
-            isDefault = true
-        }
-
-        create("api29") {
-            dimension = "nativePackaging"
-            applicationIdSuffix = ".api29"
-        }
-    }
-
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
@@ -51,22 +37,12 @@ android {
 }
 
 androidComponents.onVariants { variant ->
-    val nativePackagingFlavor =
-        variant.productFlavors.single { it.first == "nativePackaging" }.second
-    val baseAppLabel = when (nativePackagingFlavor) {
-        "legacy" -> "Priv"
-        "api29" -> "PrivQ"
-        else -> error("Unknown native packaging flavor: $nativePackagingFlavor")
-    }
+    val baseAppLabel = "Priv"
     val appLabel = if (variant.buildType == "debug") "$baseAppLabel-Dev" else baseAppLabel
     variant.resValues.put(
         variant.makeResValueKey("string", "app_name"),
         ResValue(appLabel),
     )
-    if (nativePackagingFlavor == "legacy") {
-        variant.packaging.jniLibs.useLegacyPackaging.set(true)
-        variant.packaging.jniLibs.useLegacyPackagingFromBundle.set(true)
-    }
 }
 
 dependencies {
@@ -75,7 +51,7 @@ dependencies {
     implementation(project(":priv-ui"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.foundation)
-    implementation(libs.androidx.compose.material3)
+    implementation(libs.hyper.ui)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.core.ktx)

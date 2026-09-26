@@ -19,8 +19,8 @@ pushed to a connected server and apply to the next owner death.
 
 ## Compose integration
 
-`PrivilegeScaffold` uses the caller's Material 3 theme and exposes the nested Scaffold slots,
-colors, and insets. Compose Foundation and Material 3 are API dependencies; apps using
+`PrivilegeScaffold` uses the HyperUI theme and renders a full-screen layout with caller-owned content slots,
+colors, and full-screen insets. Compose Foundation is the UI dependency; apps using
 `viewModel()` declare `androidx.lifecycle:lifecycle-viewmodel-compose` themselves.
 
 Create external providers and `PrivilegeUiConfig` once per process, then share the instance between
@@ -162,7 +162,7 @@ are mapped to presentation values at the Android composition boundary; retained 
 resolved against the current Android locale. Notification strings use Android IDs generated from
 the same XML source as Compose resources. Notification layouts remain Android-only.
 
-Wrap `PrivilegePreviewScaffold()` in the host's Material 3 theme. This entry point creates no
+Wrap `PrivilegePreviewScaffold()` in the host's HyperUI theme when custom colors are needed. This entry point creates no
 ViewModel, Core runtime, polling job, permission request, or external provider. Its session-local
 simulation drives the shared page's normal states and actions. Root, Wireless ADB,
 static TCP, and external authorization default to success after a short cancellable delay. Any six
@@ -170,9 +170,8 @@ digits complete pairing. Existing restart, stop, pairing, and TCP confirmation d
 Simulated Shell connections show a restricted-permissions warning and sample permission list when
 `adbRestricted` is true (the default). Changing it updates the current simulation without restarting
 the connection; Root connections remain unrestricted.
-The manual tab supplies a command with a randomly generated installation path for `priv.kit.sample`;
-the top Start service action simulates its execution. `useLegacyPackaging` (default `true`) selects
-the extracted library or in-APK linker command without resetting the simulated session.
+The manual tab supplies an APK linker command with a randomly generated installation path for
+`priv.kit.sample`; the top Start service action simulates its execution.
 Copy actions use the host clipboard, but commands are never executed. Host disposal cancels pending work.
 The simulation shares presentation models and components with Android, not Android runtime operations.
 

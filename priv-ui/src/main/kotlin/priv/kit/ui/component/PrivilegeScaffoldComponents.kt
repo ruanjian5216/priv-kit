@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.TextButton
+import hyper_ui.HyperButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -52,12 +52,12 @@ import priv.kit.ui.PrivilegeUiScreenScope
 import priv.kit.ui.PrivilegeUiScreenState
 import priv.kit.ui.R
 
-/** Danger 色语义容器（对应 material3 errorContainer 的角色）。 */
+/** Danger 色语义容器（对应 HyperUI danger container 的角色）。 */
 @Composable
 internal fun hyperDangerContainer(): Color =
     HyperColors.danger.copy(alpha = if (HyperColors.isLight) 0.12f else 0.22f)
 
-/** Success 色语义容器（对应 material3 tertiaryContainer 的“服务已就绪”角色）。 */
+/** Success 色语义容器（对应 HyperUI success container 的“服务已就绪”角色）。 */
 @Composable
 internal fun hyperSuccessContainer(): Color =
     HyperColors.success.copy(alpha = if (HyperColors.isLight) 0.14f else 0.24f)
@@ -119,10 +119,10 @@ internal fun PrivilegeUiScreenScope.PermissionRestrictionWarning() {
                 }
             },
             actionContent = {
-                TextButton(onClick = { clipboard.setText(AnnotatedString(permissionText)) }) {
+                HyperButton(onClick = { clipboard.setText(AnnotatedString(permissionText)) }) {
                     HyperText(stringResource(R.string.priv_ui_denied_permissions_copy))
                 }
-                TextButton(onClick = { permissionsDialogVisible = false }) {
+                HyperButton(onClick = { permissionsDialogVisible = false }) {
                     HyperText(stringResource(R.string.priv_ui_denied_permissions_close))
                 }
             },
@@ -164,13 +164,13 @@ internal fun PrivilegeUiScreenScope.PermissionRestrictionWarning() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                TextButton(
+                HyperButton(
                     onClick = onViewPermissionSolutions ?: { uriHandler.openUri(solutionsUrl) },
                     modifier = Modifier.weight(1f, fill = false),
                 ) {
                     HyperText(stringResource(R.string.priv_ui_permission_solutions_view))
                 }
-                TextButton(
+                HyperButton(
                     onClick = { permissionsDialogVisible = true },
                     modifier = Modifier.weight(1f, fill = false),
                 ) {
@@ -238,7 +238,7 @@ internal fun PrivilegeUiScreenScope.AutoRecoveryWarning() {
                     style = HyperTheme.typography.bodySmall,
                 )
             }
-            TextButton(
+            HyperButton(
                 modifier = Modifier.align(Alignment.End),
                 enabled = interactionEnabled,
                 onClick = actions.disableAutoRecovery,
@@ -277,13 +277,13 @@ internal fun PrivilegeUiScreenScope.RestartConfirmationDialog() {
             HyperText(stringResource(R.string.priv_ui_restart_service_dialog_message))
         },
         actionContent = {
-            TextButton(
+            HyperButton(
                 enabled = interactionEnabled,
                 onClick = actions.confirmServerRestart,
             ) {
                 HyperText(stringResource(R.string.priv_ui_restart_service_confirm))
             }
-            TextButton(
+            HyperButton(
                 enabled = interactionEnabled,
                 onClick = actions.cancelServerRestart,
             ) {
@@ -368,17 +368,17 @@ internal fun PrivilegeUiScreenScope.ServiceStatusPanel() {
                 HyperText(stringResource(R.string.priv_ui_stop_service_dialog_message))
             },
             actionContent = {
-                TextButton(
+                HyperButton(
                     enabled = interactionEnabled,
                     onClick = {
-                        if (!actions.canInteract()) return@TextButton
+                        if (!actions.canInteract()) return@HyperButton
                         showStopConfirmation = false
                         actions.stopServer()
                     },
                 ) {
                     HyperText(stringResource(R.string.priv_ui_stop_service_confirm))
                 }
-                TextButton(
+                HyperButton(
                     enabled = interactionEnabled,
                     onClick = { showStopConfirmation = false },
                 ) {

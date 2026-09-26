@@ -4,11 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -35,7 +31,7 @@ internal data class PrivilegeUiFingerprintTextPolicy(
 )
 
 internal fun privilegeUiFingerprintTextPolicy(
-    typography: Typography,
+    typography: hyper_ui.HyperTypography,
 ): PrivilegeUiFingerprintTextPolicy? {
     val minFontSize = typography.labelSmall.fontSize
     val maxFontSize = typography.bodySmall.fontSize
@@ -59,7 +55,7 @@ internal fun privilegeUiFingerprintShouldWrap(
 internal fun AdbFingerprintRow(
     fingerprint: String?,
 ) {
-    val typography = MaterialTheme.typography
+    val typography = HyperTheme.typography
     val fingerprintTextStyle = typography.bodySmall
     val textPolicy = privilegeUiFingerprintTextPolicy(typography)
     var fingerprintWrapped by remember(fingerprint, textPolicy) { mutableStateOf(false) }
@@ -67,13 +63,13 @@ internal fun AdbFingerprintRow(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.extraSmall),
     ) {
-        Text(
+        HyperText(
             text = stringResource(R.string.priv_ui_adb_key_fingerprint),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = HyperTheme.typography.bodyMedium,
+            color = HyperColors.secondaryText,
         )
         SelectionContainer {
-            Text(
+            HyperText(
                 modifier = Modifier.fillMaxWidth(),
                 text = fingerprint ?: stringResource(
                     R.string.priv_ui_adb_key_fingerprint_unavailable,
@@ -84,18 +80,9 @@ internal fun AdbFingerprintRow(
                     fingerprintTextStyle
                 },
                 fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = HyperColors.secondaryText,
                 maxLines = if (fingerprintWrapped) Int.MAX_VALUE else 1,
                 overflow = TextOverflow.Visible,
-                autoSize = if (fingerprintWrapped || textPolicy == null) {
-                    null
-                } else {
-                    TextAutoSize.StepBased(
-                        minFontSize = textPolicy.minFontSize,
-                        maxFontSize = textPolicy.maxFontSize,
-                        stepSize = textPolicy.stepSize,
-                    )
-                },
                 onTextLayout = { result ->
                     fingerprintWrapped = privilegeUiFingerprintShouldWrap(
                         currentlyWrapped = fingerprintWrapped,

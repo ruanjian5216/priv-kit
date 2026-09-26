@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.TextButton
+import hyper_ui.HyperButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,19 +35,19 @@ internal fun PrivilegeUiScreenScope.WirelessAdbPairingNotificationPermissionWarn
             HyperText(stringResource(R.string.priv_ui_notification_permission_unavailable_message))
         },
         actionContent = {
-            TextButton(
+            HyperButton(
                 enabled = interactionEnabled,
                 onClick = actions.continuePairingWithoutNotification,
             ) {
                 HyperText(stringResource(R.string.priv_ui_pairing_continue_action))
             }
-            TextButton(
+            HyperButton(
                 enabled = interactionEnabled,
                 onClick = actions.cancelPendingPairingStart,
             ) {
                 HyperText(stringResource(R.string.priv_ui_pairing_cancel_action))
             }
-            TextButton(
+            HyperButton(
                 enabled = interactionEnabled,
                 onClick = {
                     actions.openNotificationSettings()
@@ -118,13 +118,13 @@ internal fun PrivilegeUiScreenScope.WirelessAdbPairingDialog() {
             }
         },
         actionContent = {
-            TextButton(
+            HyperButton(
                 enabled = canSubmit,
                 onClick = actions.submitNotificationPairingCode,
             ) {
                 HyperText(stringResource(R.string.priv_ui_pairing_submit_action))
             }
-            TextButton(
+            HyperButton(
                 enabled = interactionEnabled,
                 onClick = ::dismissOrStop,
             ) {

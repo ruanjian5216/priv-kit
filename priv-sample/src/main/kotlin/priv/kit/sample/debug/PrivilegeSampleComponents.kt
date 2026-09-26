@@ -1,5 +1,8 @@
 package priv.kit.sample.debug
 
+import hyper_ui.*
+import priv.kit.sample.ui.*
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,13 +27,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -47,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import priv.kit.sample.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SamplePageScaffold(
     title: String,
@@ -58,8 +53,8 @@ internal fun SamplePageScaffold(
     actions: @Composable () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val colors = MaterialTheme.colorScheme
-    Scaffold(
+    val colors = SampleTheme.colorScheme
+    SampleScaffold(
         containerColor = colors.background,
         topBar = {
             Column(
@@ -67,14 +62,14 @@ internal fun SamplePageScaffold(
                     .fillMaxWidth()
                     .background(colors.background),
             ) {
-                TopAppBar(
+                SampleTopBar(
                     navigationIcon = {
-                        TextButton(onClick = onBackToHome) {
-                            Text(stringResource(R.string.sample_home))
+                        SampleTextButton(onClick = onBackToHome) {
+                            HyperText(stringResource(R.string.sample_home))
                         }
                     },
                     title = {
-                        BasicText(
+                        HyperText(
                             text = title,
                             style = TextStyle(
                                 color = colors.onBackground,
@@ -87,9 +82,6 @@ internal fun SamplePageScaffold(
                     actions = {
                         actions()
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = colors.background,
-                    ),
                 )
                 Column(
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 12.dp),
@@ -127,7 +119,7 @@ private fun DestinationTabs(
     LaunchedEffect(selectedIndex) {
         listState.animateScrollToItem(selectedIndex)
     }
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     LazyRow(state = listState, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         items(PrivilegeSampleDebugDestination.entries, key = { it.titleRes }) { destination ->
             val selected = destination == selectedDestination
@@ -142,7 +134,7 @@ private fun DestinationTabs(
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 contentAlignment = Alignment.Center,
             ) {
-                BasicText(
+                HyperText(
                     text = stringResource(destination.titleRes),
                     maxLines = 1,
                     style = TextStyle(
@@ -166,7 +158,7 @@ internal fun SampleTopBarAction(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     val background = if (enabled) colors.primary else colors.onSurface.copy(alpha = 0.12f)
     val foreground = if (enabled) colors.onPrimary else colors.onSurface.copy(alpha = 0.38f)
     Box(
@@ -183,7 +175,7 @@ internal fun SampleTopBarAction(
             .padding(horizontal = 12.dp),
         contentAlignment = Alignment.Center,
     ) {
-        BasicText(
+        HyperText(
             text = label,
             style = TextStyle(
                 color = foreground,
@@ -197,8 +189,8 @@ internal fun SampleTopBarAction(
 
 @Composable
 internal fun SectionTitle(text: String) {
-    val colors = MaterialTheme.colorScheme
-    BasicText(
+    val colors = SampleTheme.colorScheme
+    HyperText(
         text = text,
         style = TextStyle(
             color = colors.onSurface,
@@ -211,7 +203,7 @@ internal fun SectionTitle(text: String) {
 
 @Composable
 internal fun DiagnosticBlock(text: String) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -221,7 +213,7 @@ internal fun DiagnosticBlock(text: String) {
             .padding(16.dp),
     ) {
         SelectionContainer {
-            BasicText(
+            HyperText(
                 text = text,
                 style = TextStyle(
                     color = colors.onSurface,
@@ -239,7 +231,7 @@ internal fun StatusPanel(
     state: PrivilegeSampleScreenState,
     onStopServer: () -> Unit,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -255,7 +247,7 @@ internal fun StatusPanel(
         ) {
             StatusPill(state.status, state.busy)
             Spacer(Modifier.width(12.dp))
-            BasicText(
+            HyperText(
                 modifier = Modifier.weight(1f),
                 text = state.message,
                 style = TextStyle(
@@ -287,10 +279,10 @@ internal fun SampleField(
     keyboardOptions: KeyboardOptions,
     enabled: Boolean = true,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     val foreground = if (enabled) colors.onSurface else colors.onSurface.copy(alpha = 0.38f)
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        BasicText(
+        HyperText(
             text = label,
             style = TextStyle(
                 color = colors.onSurfaceVariant,
@@ -337,7 +329,7 @@ internal fun SampleAction(
     modifier: Modifier,
     onClick: () -> Unit,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     val enabledColors = when (tone) {
         SampleActionTone.Primary -> colors.primary to colors.onPrimary
         SampleActionTone.Secondary -> colors.secondary to colors.onSecondary
@@ -361,7 +353,7 @@ internal fun SampleAction(
             .padding(horizontal = 12.dp),
         contentAlignment = Alignment.Center,
     ) {
-        BasicText(
+        HyperText(
             text = label,
             style = TextStyle(
                 color = actualForeground,
@@ -378,7 +370,7 @@ private fun StatusPill(
     status: PrivilegeSampleStatus,
     busy: Boolean,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     val text = when {
         busy -> stringResource(R.string.sample_busy)
         status == PrivilegeSampleStatus.CONNECTED -> stringResource(R.string.sample_connected)
@@ -411,7 +403,7 @@ private fun StatusPill(
                 .background(foreground),
         )
         Spacer(modifier = Modifier.width(8.dp))
-        BasicText(
+        HyperText(
             text = text,
             style = TextStyle(
                 color = foreground,
@@ -428,13 +420,13 @@ internal fun RuntimeInfoRow(
     label: String,
     value: String,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        BasicText(
+        HyperText(
             text = label,
             style = TextStyle(
                 color = colors.onSurfaceVariant,
@@ -443,7 +435,7 @@ internal fun RuntimeInfoRow(
             ),
         )
         Spacer(modifier = Modifier.width(16.dp))
-        BasicText(
+        HyperText(
             text = value,
             style = TextStyle(
                 color = colors.onSurface,

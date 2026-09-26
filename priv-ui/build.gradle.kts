@@ -7,7 +7,7 @@ android {
     namespace = "priv.kit.ui"
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 30
     }
 
     compileOptions {
@@ -31,7 +31,6 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.material3)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)

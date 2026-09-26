@@ -1,5 +1,8 @@
 package priv.kit.sample.file
 
+import hyper_ui.*
+import priv.kit.sample.ui.*
+
 import android.content.Context
 import android.text.format.Formatter
 import androidx.activity.compose.BackHandler
@@ -21,24 +24,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -66,7 +51,6 @@ import priv.kit.core.file.PrivilegeFileMetadata
 import priv.kit.core.file.PrivilegeFileType
 import priv.kit.sample.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PrivilegeSampleDeviceFilesPage(
     serverRunning: Boolean,
@@ -76,7 +60,7 @@ internal fun PrivilegeSampleDeviceFilesPage(
     val state = viewModel.state
     val preview = state.preview
     val directoryControls = state.deviceDirectoryControls()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = remember { SampleSnackbarHostState() }
 
     LaunchedEffect(serverRunning) {
         viewModel.setServerRunning(serverRunning)
@@ -94,20 +78,20 @@ internal fun PrivilegeSampleDeviceFilesPage(
         }
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+    SampleScaffold(
+        containerColor = SampleTheme.colorScheme.background,
+        snackbarHost = { SampleSnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
+            SampleTopBar(
                 navigationIcon = {
-                    TextButton(
+                    SampleTextButton(
                         onClick = if (preview == null) onBackToHome else viewModel::closePreview,
                     ) {
-                        Text(if (preview == null) stringResource(R.string.sample_home) else stringResource(R.string.sample_files))
+                        HyperText(if (preview == null) stringResource(R.string.sample_home) else stringResource(R.string.sample_files))
                     }
                 },
                 title = {
-                    Text(
+                    HyperText(
                         text = preview?.name ?: stringResource(R.string.sample_device_files),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -116,17 +100,14 @@ internal fun PrivilegeSampleDeviceFilesPage(
                 },
                 actions = {
                     if (preview == null) {
-                        TextButton(
+                        SampleTextButton(
                             enabled = directoryControls.enabled,
                             onClick = viewModel::refreshDirectory,
                         ) {
-                            Text(stringResource(R.string.sample_refresh))
+                            HyperText(stringResource(R.string.sample_refresh))
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                ),
             )
         },
     ) { innerPadding ->
@@ -170,17 +151,17 @@ private fun DeviceDirectoryContent(
             .padding(innerPadding)
             .padding(horizontal = 16.dp),
     ) {
-        Text(
+        HyperText(
             modifier = Modifier.padding(top = 8.dp),
             text = if (state.serverRunning) stringResource(R.string.sample_server_connected) else stringResource(R.string.sample_server_disconnected),
             color = if (state.serverRunning) {
-                MaterialTheme.colorScheme.tertiary
+                SampleTheme.colorScheme.tertiary
             } else {
-                MaterialTheme.colorScheme.error
+                SampleTheme.colorScheme.error
             },
-            style = MaterialTheme.typography.labelLarge,
+            style = SampleTheme.typography.labelLarge,
         )
-        OutlinedTextField(
+        SampleOutlinedTextField(
             value = state.directoryText,
             onValueChange = onDirectoryTextChanged,
             modifier = Modifier
@@ -190,11 +171,11 @@ private fun DeviceDirectoryContent(
             readOnly = controls.directoryReadOnly,
             singleLine = true,
             isError = state.pathError != null,
-            label = { Text(stringResource(R.string.sample_current_directory)) },
+            label = { HyperText(stringResource(R.string.sample_current_directory)) },
             supportingText = state.pathError?.let { message ->
-                { Text(message) }
+                { HyperText(message) }
             },
-            textStyle = MaterialTheme.typography.bodyMedium.copy(
+            textStyle = SampleTheme.typography.bodyMedium.copy(
                 fontFamily = FontFamily.Monospace,
             ),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
@@ -244,7 +225,7 @@ private fun DeviceDirectoryContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    CircularProgressIndicator()
+                    hyper_ui.HyperCircularProgressIndicator(progress = null)
                 }
             }
         }
@@ -290,29 +271,29 @@ private fun DeviceDirectoryList(
         }
         if (state.directoryTruncated) {
             item(key = DIRECTORY_TRUNCATED_KEY) {
-                Text(
+                HyperText(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            MaterialTheme.colorScheme.tertiaryContainer,
+                            SampleTheme.colorScheme.tertiaryContainer,
                             RoundedCornerShape(8.dp),
                         )
                         .padding(12.dp),
                     text = stringResource(R.string.sample_directory_truncated),
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    style = MaterialTheme.typography.bodySmall,
+                    color = SampleTheme.colorScheme.onTertiaryContainer,
+                    style = SampleTheme.typography.bodySmall,
                 )
             }
         }
         if (state.entries.isEmpty()) {
             item(key = EMPTY_DIRECTORY_KEY) {
-                Text(
+                HyperText(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 24.dp),
                     text = stringResource(R.string.sample_this_directory_is_empty),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodyMedium,
+                    color = SampleTheme.colorScheme.onSurfaceVariant,
+                    style = SampleTheme.typography.bodyMedium,
                 )
             }
         }
@@ -353,9 +334,9 @@ private fun DeviceFileRow(
                 onClick = onClick,
             ),
     ) {
-        ListItem(
+        SampleCard(
             headlineContent = {
-                Text(
+                HyperText(
                     text = name,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -367,7 +348,7 @@ private fun DeviceFileRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
+                    HyperText(
                         modifier = if (details.sizeText == null) {
                             Modifier.fillMaxWidth()
                         } else {
@@ -377,25 +358,25 @@ private fun DeviceFileRow(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = if (details.useTabularNumerals) {
-                            MaterialTheme.typography.bodyMedium.copy(
+                            SampleTheme.typography.bodyMedium.copy(
                                 fontFeatureSettings = "tnum",
                             )
                         } else {
-                            MaterialTheme.typography.bodyMedium
+                            SampleTheme.typography.bodyMedium
                         },
                     )
                     details.sizeText?.let { sizeText ->
-                        Text(
+                        HyperText(
                             text = sizeText,
                             maxLines = 1,
                             softWrap = false,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = SampleTheme.typography.bodyMedium,
                         )
                     }
                 }
             },
             leadingContent = {
-                Icon(
+                HyperIcon(
                     painter = painterResource(
                         when (type) {
                             PrivilegeFileType.DIRECTORY -> R.drawable.ic_priv_sample_folder
@@ -412,14 +393,14 @@ private fun DeviceFileRow(
                         else -> stringResource(R.string.sample_file)
                     },
                     tint = if (isDirectory) {
-                        MaterialTheme.colorScheme.primary
+                        SampleTheme.colorScheme.primary
                     } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                        SampleTheme.colorScheme.onSurfaceVariant
                     },
                 )
             },
         )
-        HorizontalDivider()
+        hyper_ui.HyperDivider()
     }
 }
 
@@ -437,7 +418,7 @@ private fun DeviceFilePreviewContent(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center,
         ) {
-            CircularProgressIndicator()
+            hyper_ui.HyperCircularProgressIndicator(progress = null)
         }
 
         is PrivilegeSampleFilePreview.Error -> DeviceFilesStatusPanel(
@@ -477,35 +458,31 @@ private fun DeviceFilePreviewBody(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         SelectionContainer {
-            Text(
+            HyperText(
                 text = preview.absolutePath,
-                style = MaterialTheme.typography.bodySmall,
+                style = SampleTheme.typography.bodySmall,
                 fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = SampleTheme.colorScheme.onSurfaceVariant,
             )
         }
-        Text(
+        HyperText(
             text = preview.previewSummary(context),
-            style = MaterialTheme.typography.bodySmall,
+            style = SampleTheme.typography.bodySmall,
             color = if (preview.truncated) {
-                MaterialTheme.colorScheme.tertiary
+                SampleTheme.colorScheme.tertiary
             } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
+                SampleTheme.colorScheme.onSurfaceVariant
             },
         )
-        SingleChoiceSegmentedButtonRow(
+        Row(
             modifier = Modifier.fillMaxWidth(),
         ) {
             PrivilegeSampleFilePreviewMode.entries.forEachIndexed { index, mode ->
-                SegmentedButton(
-                    selected = preview.mode == mode,
+                HyperButton(
                     onClick = { onSelectMode(mode) },
-                    shape = SegmentedButtonDefaults.itemShape(
-                        index = index,
-                        count = PrivilegeSampleFilePreviewMode.entries.size,
-                    ),
+                    shape = HyperTheme.shapes.small,
                 ) {
-                    Text(stringResource(mode.labelRes))
+                    HyperText(stringResource(mode.labelRes))
                 }
             }
         }
@@ -516,16 +493,16 @@ private fun DeviceFilePreviewBody(
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
                     .background(
-                        MaterialTheme.colorScheme.surfaceContainerHighest,
+                        SampleTheme.colorScheme.surfaceContainerHighest,
                         RoundedCornerShape(8.dp),
                     )
                     .padding(12.dp),
             ) {
-                Text(
+                HyperText(
                     text = text.ifEmpty { stringResource(R.string.sample_empty) },
                     modifier = Modifier.fillMaxWidth(),
                     fontFamily = FontFamily.Monospace,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = SampleTheme.typography.bodySmall,
                 )
             }
 
@@ -534,23 +511,23 @@ private fun DeviceFilePreviewBody(
                     .fillMaxWidth()
                     .weight(1f)
                     .background(
-                        MaterialTheme.colorScheme.surfaceContainerHighest,
+                        SampleTheme.colorScheme.surfaceContainerHighest,
                         RoundedCornerShape(8.dp),
                     ),
                 contentPadding = PaddingValues(12.dp),
             ) {
                 if (hexRowCount == 0) {
-                    item { Text(stringResource(R.string.sample_empty), fontFamily = FontFamily.Monospace) }
+                    item { HyperText(stringResource(R.string.sample_empty), fontFamily = FontFamily.Monospace) }
                 } else {
                     items(
                         count = hexRowCount,
                         key = { rowIndex -> rowIndex },
                     ) { rowIndex ->
-                        Text(
+                        HyperText(
                             text = preview.bytes.formatHexRow(rowIndex),
                             maxLines = 1,
                             fontFamily = FontFamily.Monospace,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = SampleTheme.typography.bodySmall,
                         )
                     }
                 }
@@ -578,29 +555,29 @@ private fun DeviceFilesStatusPanel(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(
+            HyperText(
                 text = title,
-                style = MaterialTheme.typography.titleMedium,
+                style = SampleTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
             )
             if (actionLabel != null && onAction != null) {
                 SelectionContainer {
-                    Text(
+                    HyperText(
                         text = message,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = SampleTheme.typography.bodyMedium,
+                        color = SampleTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             } else {
-                Text(
+                HyperText(
                     text = message,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = SampleTheme.typography.bodyMedium,
+                    color = SampleTheme.colorScheme.onSurfaceVariant,
                 )
             }
             if (actionLabel != null && onAction != null) {
-                Button(onClick = onAction) {
-                    Text(actionLabel)
+                HyperButton(onClick = onAction) {
+                    HyperText(actionLabel)
                 }
             }
         }

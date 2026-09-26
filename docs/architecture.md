@@ -74,7 +74,7 @@ wrapper 隔离。该模块保持无资源、无组件、无长期可变状态，
 
 `:priv-adb-crypto` 保持为纯 Kotlin/JVM 的最小 ADB 加密实现。`:priv-ui` 编排 Core
 原语，Core 维持对 UI 的单向独立。`:priv-sample` 展示发布模块能力，并从同一源码树
-构建 API 26 legacy 和 API 29 modern packaging 两个 flavor。`:hidden-api` 只参与编译。
+构建 API 30 packaging flavor。`:hidden-api` 只参与编译。
 
 ## 运行时闭环
 
@@ -103,8 +103,7 @@ classpath 和本次启动关联。
 Root、ADB、手动命令和外部授权桥执行同一个 native starter。Core 保存 transport、日志
 和诊断，第三方绑定与应用 AIDL 留在接入应用、可选集成或 sample。
 
-Android 10 以下版本使用 `nativeLibraryDir` 中的解压 starter。Android 10 及以上根据
-安装元数据选择解压文件，或通过系统 linker 执行 APK/ABI split 中未压缩的 starter。
+项目只支持 Android 11（API 30）及以上，通过系统 linker 执行 APK/ABI split 中未压缩的 starter。
 
 Starter 在读取 APK、结束旧进程和 fork 前校验实际 UID，支持 root（0）、system
 （1000）和 shell（2000）。Provider 再按调用方 UID 验证 handoff。
@@ -232,7 +231,7 @@ pump，客户端消费时也同时读取两条 pipe，避免任一有限缓冲�
 统一由 `PrivilegeUiSimulation` 内存状态驱动，复用相同页面、文案、配对和确认弹窗，
 不再维护静态禁用预览分支。Root、无线 ADB、静态
 端口与外部授权在可取消的延时后默认成功；手动页按会话生成随机安装路径，包名固定为
-`priv.kit.sample`，通过 `useLegacyPackaging` 切换解压库与 APK 内库的命令格式，顶部启动操作模拟执行。
+`priv.kit.sample`，使用 APK linker 命令格式，顶部启动操作模拟执行。
 模拟不创建运行时、网络请求或系统权限操作；复制按钮只复制示例文本，宿主销毁会取消任务。
 中英文字符串以 `commonMain/composeResources` 为唯一源，同时生成 Compose 资源与 Android
 资源 ID，保留通知的同步解析路径。Notification pairing 的 `RemoteViews` XML 只用于通知。

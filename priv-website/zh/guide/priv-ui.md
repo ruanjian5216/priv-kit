@@ -214,10 +214,10 @@ UI 发起的前台启动成功并收到匹配的初始连接后，才会开启�
 
 ## 跨平台展示 {#multiplatform-preview}
 
-`PrivilegePreviewScaffold()` 可在 Android、JVM 和 WasmJS 中展示同一套页面。由宿主提供 Material 3 主题，内存模拟数据驱动正常的状态、按钮和弹窗。该入口不初始化运行时，也不申请权限。Android 真实功能继续使用 `PrivilegeScaffold`。
+`PrivilegePreviewScaffold()` 可在 Android、JVM 和 WasmJS 中展示同一套页面。由宿主提供 HyperUI 主题，内存模拟数据驱动正常的状态、按钮和弹窗。该入口不初始化运行时，也不申请权限。Android 真实功能继续使用 `PrivilegeScaffold`。
 
 启动、配对、外部授权及确认弹窗默认可交互。操作模拟成功，配对接受任意六位数字。手动页提供示例命令，顶部“启动服务”操作模拟执行该命令。复制按钮使用宿主剪贴板，但不会执行命令或修改系统；关闭宿主后丢弃本次数据。可在 [UI 展示](/zh/playground/) 中体验。
 
-手动命令使用为 `priv.kit.sample` 随机生成的安装路径。设置 `useLegacyPackaging = false` 可展示通过 `linker64` 加载 APK 内原生库的命令，默认值 `true` 展示解压后的原生库路径。展示页在画布外提供该开关；切换格式会保留路径和模拟状态。
+手动命令使用为 `priv.kit.sample` 随机生成的安装路径，并固定展示 API 30 以上的 APK linker 命令。
 
 通过顶栏的「UI 展示」打开独立的 Vue 展示页。

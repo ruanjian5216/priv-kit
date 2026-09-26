@@ -8,20 +8,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.TextButton
+import hyper_ui.HyperButton
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperText
-import kotlinx.coroutines.launch
 import androidx.compose.ui.res.stringResource
 import priv.kit.ui.component.PrivilegeTopBar
 
 /**
  * Displays the shared page with an in-memory simulation; no runtime is created.
- * [useLegacyPackaging] selects the simulated manual command's native library packaging format.
  * [adbRestricted] controls permission restrictions for simulated Shell connections.
  * [batteryOptimizationExempt] and [localNetworkPermissionGranted] control simulated permission cards.
  * [onPermissionsChanged] reports successful simulated requests to the host controls.
@@ -31,7 +28,6 @@ import priv.kit.ui.component.PrivilegeTopBar
 @Suppress("DEPRECATION")
 public fun PrivilegePreviewScaffold(
     modifier: Modifier = Modifier,
-    useLegacyPackaging: Boolean = true,
     adbRestricted: Boolean = true,
     batteryOptimizationExempt: Boolean = true,
     localNetworkPermissionGranted: Boolean = true,
@@ -51,7 +47,7 @@ public fun PrivilegePreviewScaffold(
     })
     val scope = rememberCoroutineScope()
     val clipboard = LocalClipboardManager.current
-    val snackbar = remember { SnackbarHostState() }
+    var feedbackMessage by remember { mutableStateOf<String?>(null) }
     val externalLabel = stringResource(R.string.priv_ui_simulation_external)
     val startingText = mapOf(
         PrivilegeUiRuntimeStartSource.ROOT to stringResource(R.string.priv_ui_starting_root),
@@ -69,7 +65,6 @@ public fun PrivilegePreviewScaffold(
         }
     }
     SideEffect {
-        simulation.setUseLegacyPackaging(useLegacyPackaging)
         simulation.setAdbRestricted(adbRestricted)
         simulation.setPermissions(batteryExempt, networkGranted)
     }
@@ -82,10 +77,10 @@ public fun PrivilegePreviewScaffold(
                 HyperText(stringResource(R.string.priv_ui_simulation_external_confirmation))
             },
             actionContent = {
-                TextButton(onClick = simulation::confirmExternalAuthorization) {
+                HyperButton(onClick = simulation::confirmExternalAuthorization) {
                     HyperText(stringResource(R.string.priv_ui_ok))
                 }
-                TextButton(onClick = simulation::cancelOperation) {
+                HyperButton(onClick = simulation::cancelOperation) {
                     HyperText(stringResource(R.string.priv_ui_pairing_cancel_action))
                 }
             },
@@ -97,10 +92,10 @@ public fun PrivilegePreviewScaffold(
             state = simulation.state,
             actions = simulation.actions,
             interactionEnabled = true,
-            showFeedback = { scope.launch { snackbar.showSnackbar(it) } },
+            showFeedback = { feedbackMessage = it },
             onViewPermissionSolutions = onViewPermissionSolutions,
         ),
-        snackbarHostState = snackbar,
         topBar = { PrivilegeTopBar(onBack = {}, backEnabled = false) },
+        feedbackMessage = feedbackMessage,
     )
 }

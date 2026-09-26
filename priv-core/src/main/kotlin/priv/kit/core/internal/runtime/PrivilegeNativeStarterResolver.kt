@@ -33,7 +33,6 @@ internal object PrivilegeNativeStarterResolver {
             applicationInfo.splitSourceDirs?.sorted()?.forEach(::add)
         }
         return resolve(
-            sdkInt = Build.VERSION.SDK_INT,
             apkPaths = apkPaths,
             nativeLibraryDir = applicationInfo.nativeLibraryDir,
             supportedAbis = Build.SUPPORTED_ABIS.toList(),
@@ -44,7 +43,6 @@ internal object PrivilegeNativeStarterResolver {
     }
 
     internal fun resolve(
-        sdkInt: Int,
         apkPaths: List<String>,
         nativeLibraryDir: String,
         supportedAbis: List<String>,
@@ -57,7 +55,7 @@ internal object PrivilegeNativeStarterResolver {
         // With extractNativeLibs=false, Android's installer rejects native entries that are
         // compressed or not page-aligned. That platform check makes a STORED entry safe to
         // hand to the linker without parsing private ZIP offsets here.
-        if (sdkInt >= Build.VERSION_CODES.Q && !extractNativeLibs) {
+        if (!extractNativeLibs) {
             findApkEntry(
                 apkPaths = apkPaths,
                 supportedAbis = supportedAbis,
@@ -68,13 +66,6 @@ internal object PrivilegeNativeStarterResolver {
             return PrivilegeNativeStarterLocation.InstalledFile(installedPath)
         }
 
-        if (sdkInt < Build.VERSION_CODES.Q) {
-            throw PrivilegeStartupException(
-                "minSdk < 29 requires packaging.jniLibs." +
-                    "useLegacyPackaging = true so $NATIVE_STARTER_LIBRARY_NAME is extracted; " +
-                    "no installed starter was found at $installedPath",
-            )
-        }
         throw PrivilegeStartupException(
             "No usable $NATIVE_STARTER_LIBRARY_NAME was found in the app APKs or at " +
                 "$installedPath; the APK entry must be uncompressed for direct linker startup",

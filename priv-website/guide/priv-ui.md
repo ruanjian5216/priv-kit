@@ -245,10 +245,10 @@ a complete
 
 ## Multiplatform preview {#multiplatform-preview}
 
-`PrivilegePreviewScaffold()` displays the same page on Android, JVM, and WasmJS inside the host's Material 3 theme. In-memory simulation drives its normal states, buttons, and dialogs. It does not initialize a runtime or request permissions. Use `PrivilegeScaffold` for real Android integration.
+`PrivilegePreviewScaffold()` displays the same page on Android, JVM, and WasmJS inside the host's HyperUI theme. In-memory simulation drives its normal states, buttons, and dialogs. It does not initialize a runtime or request permissions. Use `PrivilegeScaffold` for real Android integration.
 
 Startup, pairing, external authorization, and confirmation dialogs are interactive by default. Operations simulate success; pairing accepts any six digits. The manual tab provides a sample command, and the top Start service action simulates its execution. Copy buttons use the host clipboard, but no commands or system operations run. Closing the host discards the session. Try it in the [UI playground](/playground/).
 
-The manual command uses a randomly generated installation path for `priv.kit.sample`. Set `useLegacyPackaging = false` to show the `linker64` command for the library inside the APK; the default `true` shows the extracted library path. The playground provides this switch outside the canvas. Switching formats preserves the path and simulation state.
+The manual command uses a randomly generated installation path for `priv.kit.sample` and always shows the API 30+ APK linker command.
 
 Open the independent Vue playground using the **UI playground** navigation link.

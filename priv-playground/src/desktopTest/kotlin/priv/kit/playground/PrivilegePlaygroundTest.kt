@@ -9,7 +9,7 @@ import java.io.File
 import java.util.Locale
 import kotlin.test.Test
 import priv.kit.ui.PrivilegePreviewScaffold
-import androidx.compose.material3.MaterialTheme
+import hyper_ui.HyperThemeConfig
 
 @OptIn(ExperimentalTestApi::class)
 class PrivilegePlaygroundTest {
@@ -22,7 +22,7 @@ class PrivilegePlaygroundTest {
                 val batteryExempt = androidx.compose.runtime.mutableStateOf(false)
                 val networkGranted = androidx.compose.runtime.mutableStateOf(false)
                 setContent {
-                    MaterialTheme {
+                    HyperThemeConfig {
                         PrivilegePreviewScaffold(
                             batteryOptimizationExempt = batteryExempt.value,
                             localNetworkPermissionGranted = networkGranted.value,
@@ -61,7 +61,7 @@ class PrivilegePlaygroundTest {
         try {
             Locale.setDefault(Locale.ENGLISH)
             runSkikoComposeUiTest(size = Size(480f, 820f)) {
-                setContent { MaterialTheme { PrivilegePreviewScaffold() } }
+                setContent { HyperThemeConfig { PrivilegePreviewScaffold() } }
                 onNodeWithText("Root").performClick().assertIsSelected()
                 mainClock.autoAdvance = false
                 onNodeWithContentDescription("Start service").performClick()
@@ -89,7 +89,7 @@ class PrivilegePlaygroundTest {
         try {
             Locale.setDefault(Locale.ENGLISH)
             runSkikoComposeUiTest(size = Size(480f, 820f)) {
-                setContent { MaterialTheme { PrivilegePreviewScaffold() } }
+                setContent { HyperThemeConfig { PrivilegePreviewScaffold() } }
                 onNodeWithText("Not started").assertExists()
                 onNodeWithText("Root").performClick().assertIsSelected()
                 onNodeWithText("Start").performClick()

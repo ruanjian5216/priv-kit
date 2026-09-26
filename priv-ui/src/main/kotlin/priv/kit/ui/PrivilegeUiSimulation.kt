@@ -24,11 +24,8 @@ internal class PrivilegeUiSimulation(
 ) {
     private val installationDirectory = "/data/app/~~${randomInstallToken()}/priv.kit.sample-${randomInstallToken()}"
 
-    private fun manualCommand(useLegacyPackaging: Boolean): String = if (useLegacyPackaging) {
-        "adb shell $installationDirectory/lib/arm64/libprivkitstarter.so"
-    } else {
+    private fun manualCommand(): String =
         "adb shell /system/bin/linker64 '$installationDirectory/base.apk!/lib/arm64-v8a/libprivkitstarter.so'"
-    }
 
     private fun randomInstallToken(): String = Base64.UrlSafe.encode(Random.nextBytes(16))
 
@@ -43,7 +40,7 @@ internal class PrivilegeUiSimulation(
             wirelessPairingCheckStatus = PrivilegeUiWirelessAdbStatus.OFF,
             managedWirelessAdbStatus = PrivilegeUiManagedWirelessAdbStatus.READY,
             adbKeyFingerprint = "D3:50:9A:42:70:1B:8C:EE:41:20:7F:68:34:AD:09:55",
-            manualShellCommandLine = manualCommand(useLegacyPackaging = true),
+            manualShellCommandLine = manualCommand(),
             permissionRestrictionStatus = PrivilegeUiPermissionRestrictionStatus.NOT_RESTRICTED,
             externalStartItems = listOf(PrivilegeUiExternalStartItemState(
                 id = "simulation",
@@ -78,10 +75,6 @@ internal class PrivilegeUiSimulation(
         "android.permission.INJECT_EVENTS",
         "android.permission.WRITE_SECURE_SETTINGS",
     )
-
-    fun setUseLegacyPackaging(value: Boolean) {
-        state = state.copy(manualShellCommandLine = manualCommand(value))
-    }
 
     fun setPermissions(batteryExempt: Boolean, networkGranted: Boolean) {
         state = state.copy(batteryOptimizationPromptVisible = !batteryExempt,

@@ -1,5 +1,8 @@
 package priv.kit.sample.debug
 
+import hyper_ui.*
+import priv.kit.sample.ui.*
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -112,7 +114,7 @@ private fun SystemServiceCheckPanel(
     onSystemServiceNameChanged: (String) -> Unit,
     onCheckSystemService: () -> Unit,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -122,7 +124,7 @@ private fun SystemServiceCheckPanel(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         SectionTitle(stringResource(R.string.sample_system_service_availability))
-        BasicText(
+        HyperText(
             text = stringResource(R.string.sample_check_the_same_service_name_from_this_app_process_and_the_privileged_server),
             style = TextStyle(
                 color = colors.onSurfaceVariant,
@@ -155,13 +157,13 @@ private fun SystemServiceCheckPanel(
         ) {
             RuntimeInfoRow(
                 label = stringResource(R.string.sample_current_process),
-                value = systemServiceStatusText(
+                value = systemServiceStatusHyperText(
                     presence = state.systemServiceCheckResult?.currentProcess,
                 ),
             )
             RuntimeInfoRow(
                 label = stringResource(R.string.sample_privileged_process),
-                value = systemServiceStatusText(
+                value = systemServiceStatusHyperText(
                     presence = state.systemServiceCheckResult?.serverProcess,
                 ),
             )
@@ -170,7 +172,7 @@ private fun SystemServiceCheckPanel(
 }
 
 @Composable
-private fun systemServiceStatusText(
+private fun systemServiceStatusHyperText(
     presence: PrivilegeSampleSystemServicePresence?,
 ): String =
     when {
@@ -183,7 +185,7 @@ private fun systemServiceStatusText(
 
 @Composable
 private fun BinderStatusPanel(state: PrivilegeSampleScreenState) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -203,7 +205,7 @@ private fun BinderStatusPanel(state: PrivilegeSampleScreenState) {
         )
         RuntimeInfoRow(label = "IUserManager", value = if (state.userManagerCached) stringResource(R.string.sample_cached) else "-")
         SelectionContainer {
-            BasicText(
+            HyperText(
                 text = state.binderMessage,
                 style = TextStyle(
                     color = colors.onSurfaceVariant,

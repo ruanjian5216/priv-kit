@@ -3,7 +3,7 @@
 An unpublished UI demonstration host under `priv.kit.playground`. It consumes `:priv-ui` on
 Desktop/JVM and Browser/WasmJS. Android integration remains in `:priv-sample`.
 
-`commonMain` provides the Material 3 theme and renders `PrivilegePreviewScaffold()`. The Desktop
+`commonMain` provides the HyperUI theme and renders `PrivilegePreviewScaffold()`. The Desktop
 entry point creates a resizable window. The Wasm entry point exports `renderPrivilegePlayground`,
 which accepts a host element, resource URL resolver, theme, `useLegacyPackaging`, and `adbRestricted`. The website owns the element lifecycle.
 Root, Wireless ADB, static TCP, manual startup, and external authorization use an in-memory simulation.

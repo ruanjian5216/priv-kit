@@ -1,5 +1,8 @@
 package priv.kit.sample.home
 
+import hyper_ui.*
+import priv.kit.sample.ui.*
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,14 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import priv.kit.sample.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PrivilegeSampleHomePage(
     serverRunning: Boolean,
@@ -40,21 +34,18 @@ internal fun PrivilegeSampleHomePage(
     onOpenFileApi: () -> Unit,
     onOpenCommandApi: () -> Unit,
 ) {
-    val colors = MaterialTheme.colorScheme
-    Scaffold(
+    val colors = SampleTheme.colorScheme
+    SampleScaffold(
         containerColor = colors.background,
         topBar = {
-            TopAppBar(
+            SampleTopBar(
                 title = {
-                    Text(
+                    HyperText(
                         text = "Priv Kit",
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = SampleTheme.typography.headlineSmall,
                         fontWeight = FontWeight.SemiBold,
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colors.background,
-                ),
             )
         },
     ) { innerPadding ->
@@ -67,41 +58,41 @@ internal fun PrivilegeSampleHomePage(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             ServerStatusRow(running = serverRunning)
-            Text(
+            HyperText(
                 modifier = Modifier.padding(top = 4.dp),
                 text = stringResource(R.string.sample_choose_the_surface_you_want_to_inspect),
-                style = MaterialTheme.typography.bodyLarge,
+                style = SampleTheme.typography.bodyLarge,
                 color = colors.onSurfaceVariant,
             )
-            Button(
+            HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onOpenPrivilegeUi,
             ) {
-                Text(stringResource(R.string.sample_open_privilege_ui))
+                HyperText(stringResource(R.string.sample_open_privilege_ui))
             }
-            FilledTonalButton(
+            HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onOpenDebug,
             ) {
-                Text(stringResource(R.string.sample_open_debug_tools))
+                HyperText(stringResource(R.string.sample_open_debug_tools))
             }
-            FilledTonalButton(
+            HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onOpenFileApi,
             ) {
-                Text(stringResource(R.string.sample_test_file_api))
+                HyperText(stringResource(R.string.sample_test_file_api))
             }
-            FilledTonalButton(
+            HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onOpenDeviceFiles,
             ) {
-                Text(stringResource(R.string.sample_browse_device_files))
+                HyperText(stringResource(R.string.sample_browse_device_files))
             }
-            FilledTonalButton(
+            HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onOpenCommandApi,
             ) {
-                Text(stringResource(R.string.sample_test_command_api))
+                HyperText(stringResource(R.string.sample_test_command_api))
             }
         }
     }
@@ -109,7 +100,7 @@ internal fun PrivilegeSampleHomePage(
 
 @Composable
 private fun ServerStatusRow(running: Boolean) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     val statusColor = if (running) colors.tertiary else colors.onSurfaceVariant
     Row(
         modifier = Modifier
@@ -122,9 +113,9 @@ private fun ServerStatusRow(running: Boolean) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
+        HyperText(
             text = stringResource(R.string.sample_server_status),
-            style = MaterialTheme.typography.titleMedium,
+            style = SampleTheme.typography.titleMedium,
             color = colors.onSurface,
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -135,9 +126,9 @@ private fun ServerStatusRow(running: Boolean) {
                     .background(statusColor, CircleShape),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(
+            HyperText(
                 text = if (running) stringResource(R.string.sample_running) else stringResource(R.string.sample_stopped),
-                style = MaterialTheme.typography.bodyMedium,
+                style = SampleTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium,
                 color = statusColor,
             )

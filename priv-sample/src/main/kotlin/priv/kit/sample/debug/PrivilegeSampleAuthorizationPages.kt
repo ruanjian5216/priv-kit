@@ -1,5 +1,8 @@
 package priv.kit.sample.debug
 
+import hyper_ui.*
+import priv.kit.sample.ui.*
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -103,7 +105,7 @@ private fun StartupTabs(
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 rowTabs.forEach { tab ->
                     val selected = selectedStartupTab == tab
-                    StartupTabButton(
+                    StartupTabHyperButton(
                         label = stringResource(tab.titleRes),
                         selected = selected,
                         enabled = !busy || selected,
@@ -118,14 +120,14 @@ private fun StartupTabs(
 }
 
 @Composable
-private fun StartupTabButton(
+private fun StartupTabHyperButton(
     label: String,
     selected: Boolean,
     enabled: Boolean,
     modifier: Modifier,
     onClick: () -> Unit,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     val background = when {
         selected -> colors.primary
         enabled -> colors.surfaceContainerHigh
@@ -150,7 +152,7 @@ private fun StartupTabButton(
             .padding(horizontal = 10.dp),
         contentAlignment = Alignment.Center,
     ) {
-        BasicText(
+        HyperText(
             text = label,
             style = TextStyle(
                 color = foreground,
@@ -208,7 +210,7 @@ private fun ShizukuPage(
     state: PrivilegeSampleScreenState,
     onStartShizukuExternal: () -> Unit,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Column(
             modifier = Modifier
@@ -223,7 +225,7 @@ private fun ShizukuPage(
             RuntimeInfoRow(label = "uid", value = state.shizukuUid?.toString() ?: "-")
             RuntimeInfoRow(label = stringResource(R.string.sample_version), value = state.shizukuVersion?.toString() ?: "-")
             SelectionContainer {
-                BasicText(
+                HyperText(
                     text = state.shizukuMessage,
                     style = TextStyle(
                         color = colors.onSurfaceVariant,
@@ -262,7 +264,7 @@ private fun PairingStatusPanel(
     fingerprint: String?,
     fingerprintLoading: Boolean,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     val background = when (status) {
         PrivilegeAdbPairingStatus.PAIRED -> colors.tertiaryContainer
         PrivilegeAdbPairingStatus.FAILED -> colors.errorContainer
@@ -301,7 +303,7 @@ private fun PairingStatusPanel(
                     .background(foreground),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            BasicText(
+            HyperText(
                 text = stringResource(R.string.sample_pairing_status, stringResource(status.labelRes)),
                 style = TextStyle(
                     color = foreground,
@@ -311,7 +313,7 @@ private fun PairingStatusPanel(
                 ),
             )
         }
-        BasicText(
+        HyperText(
             text = message,
             style = TextStyle(
                 color = foreground.copy(alpha = 0.82f),
@@ -320,7 +322,7 @@ private fun PairingStatusPanel(
                 lineHeight = 18.sp,
             ),
         )
-        BasicText(
+        HyperText(
             text = stringResource(R.string.sample_fingerprint, when {
                 fingerprintLoading -> stringResource(R.string.sample_loading)
                 fingerprint != null -> fingerprint
@@ -473,7 +475,7 @@ private fun SessionPage(
     onClearLog: () -> Unit,
     onCopyLog: () -> Unit,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             SampleAction(
@@ -500,7 +502,7 @@ private fun SessionPage(
                 .padding(16.dp),
         ) {
             SelectionContainer {
-                BasicText(
+                HyperText(
                     text = state.logText.ifBlank { "-" },
                     style = TextStyle(
                         color = colors.onSurface,
@@ -519,7 +521,7 @@ private fun CommandBlock(
     commandLine: String,
     onCopy: () -> Unit,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -528,7 +530,7 @@ private fun CommandBlock(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        BasicText(
+        HyperText(
             text = stringResource(R.string.sample_run_starter_inside_adb_shell),
             style = TextStyle(
                 color = colors.onSurfaceVariant,
@@ -537,7 +539,7 @@ private fun CommandBlock(
                 fontWeight = FontWeight.Medium,
             ),
         )
-        BasicText(
+        HyperText(
             text = commandLine,
             style = TextStyle(
                 color = colors.onSurface,

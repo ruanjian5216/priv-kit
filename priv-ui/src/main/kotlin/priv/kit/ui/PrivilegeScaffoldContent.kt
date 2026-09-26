@@ -3,28 +3,31 @@ package priv.kit.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.contentColorFor
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.zIndex
 import hyper_ui.HyperColors
+import hyper_ui.HyperTheme
+import hyper_ui.HyperThemeConfig
 import priv.kit.ui.component.AdbPanel
 import priv.kit.ui.component.PermissionRestrictionWarning
 import priv.kit.ui.component.AuthorizationModeTabs
@@ -44,81 +47,97 @@ internal fun PrivilegeScaffoldContent(
     screenScope: PrivilegeUiScreenScope,
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit,
-    bottomBar: @Composable () -> Unit = {},
-    snackbarHost: @Composable (SnackbarHostState) -> Unit = { SnackbarHost(it) },
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    floatingActionButton: @Composable () -> Unit = {},
-    floatingActionButtonPosition: FabPosition = FabPosition.End,
     containerColor: Color = HyperColors.pageBackground,
-    contentColor: Color = contentColorFor(containerColor),
-    contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
+    contentColor: Color = HyperColors.primaryText,
+    feedbackMessage: String? = null,
 ) {
     val state = screenScope.state
     val interactionEnabled = screenScope.interactionEnabled
     screenScope.RestartConfirmationDialog()
-    Scaffold(
-        modifier = modifier,
-        topBar = topBar,
-        bottomBar = bottomBar,
-        snackbarHost = {
-            snackbarHost(snackbarHostState)
-        },
-        floatingActionButton = floatingActionButton,
-        floatingActionButtonPosition = floatingActionButtonPosition,
-        containerColor = containerColor,
-        contentColor = contentColor,
-        contentWindowInsets = contentWindowInsets,
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .consumeWindowInsets(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(
-                    start = PrivilegeUiSpacing.large,
-                    top = PrivilegeUiSpacing.medium,
-                    end = PrivilegeUiSpacing.large,
-                    bottom = PrivilegeUiSpacing.extraLarge,
-                ),
-            verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.large),
-        ) {
-            Column {
-                AnimatedVisibility(
-                    visible = privilegeUiAutoRecoveryWarningVisible(
-                        state = state,
-                        interactionEnabled = interactionEnabled,
+    HyperThemeConfig(darkTheme = isSystemInDarkTheme()) {
+      androidx.compose.runtime.CompositionLocalProvider(
+          hyper_ui.LocalHyperContentColor provides contentColor,
+      ) {
+        Box(modifier = modifier.fillMaxSize().background(containerColor)) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier.windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Top),
                     ),
                 ) {
-                    Column {
-                        screenScope.AutoRecoveryWarning()
-                        Spacer(Modifier.height(PrivilegeUiSpacing.large))
-                    }
+                    topBar()
                 }
-                screenScope.ServiceStatusPanel()
-                AnimatedVisibility(
-                    visible = privilegeUiPermissionRestrictionWarningVisible(
-                        runtimeStatus = state.runtimeStatus,
-                        restrictionStatus = state.permissionRestrictionStatus,
-                    ),
-                    enter = expandVertically(expandFrom = Alignment.Top),
-                    exit = shrinkVertically(shrinkTowards = Alignment.Top),
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                        .padding(
+                            start = PrivilegeUiSpacing.large,
+                            top = PrivilegeUiSpacing.medium,
+                            end = PrivilegeUiSpacing.large,
+                            bottom = PrivilegeUiSpacing.extraLarge,
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.large),
                 ) {
                     Column {
-                        Spacer(Modifier.height(PrivilegeUiSpacing.large))
-                        screenScope.PermissionRestrictionWarning()
+                        AnimatedVisibility(
+                            visible = privilegeUiAutoRecoveryWarningVisible(
+                                state = state,
+                                interactionEnabled = interactionEnabled,
+                            ),
+                        ) {
+                            Column {
+                                screenScope.AutoRecoveryWarning()
+                                Spacer(Modifier.height(PrivilegeUiSpacing.large))
+                            }
+                        }
+                        screenScope.ServiceStatusPanel()
+                        AnimatedVisibility(
+                            visible = privilegeUiPermissionRestrictionWarningVisible(
+                                runtimeStatus = state.runtimeStatus,
+                                restrictionStatus = state.permissionRestrictionStatus,
+                            ),
+                            enter = expandVertically(expandFrom = Alignment.Top),
+                            exit = shrinkVertically(shrinkTowards = Alignment.Top),
+                        ) {
+                            Column {
+                                Spacer(Modifier.height(PrivilegeUiSpacing.large))
+                                screenScope.PermissionRestrictionWarning()
+                            }
+                        }
+                    }
+                    screenScope.AuthorizationModeTabs()
+                    screenScope.AuthorizationModePanel()
+                    if (state.startupLogLines.isNotEmpty()) {
+                        screenScope.StartupLogPanel()
                     }
                 }
             }
-            screenScope.AuthorizationModeTabs()
-            screenScope.AuthorizationModePanel()
-            if (state.startupLogLines.isNotEmpty()) {
-                screenScope.StartupLogPanel()
+            if (feedbackMessage != null) {
+                HyperFeedbackBanner(
+                    message = feedbackMessage,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .zIndex(2f),
+                )
             }
         }
+      }
     }
 }
 
+@Composable
+private fun HyperFeedbackBanner(message: String, modifier: Modifier = Modifier) {
+    hyper_ui.HyperPanel(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = PrivilegeUiSpacing.large, vertical = PrivilegeUiSpacing.medium),
+        colors = hyper_ui.HyperPanelColors(containerColor = HyperColors.primaryText),
+        shape = HyperTheme.shapes.medium,
+    ) {
+        hyper_ui.HyperText(message, color = HyperColors.pageBackground)
+    }
+}
 internal fun privilegeUiAutoRecoveryWarningVisible(
     state: PrivilegeUiScreenState,
     interactionEnabled: Boolean,

@@ -6,11 +6,9 @@
 
 | Flavor | Minimum Android version | Native library packaging | Release application id |
 | --- | --- | --- | --- |
-| `legacy` | Android 8.0 (API 26) | `useLegacyPackaging = true` | `priv.kit.sample` |
-| `api29` | Android 10 (API 29) | AGP modern packaging | `priv.kit.sample.api29` |
+| 默认变体 | Android 11（API 30） | AGP 默认原生库打包 | `priv.kit.sample` |
 
-Use `assembleLegacyDebug` to exercise the extracted starter and `assembleApi29Debug` to exercise
-linker startup from the APK.
+The single debug/release variant uses the API 30+ APK linker startup path.
 
 ## Source layout
 

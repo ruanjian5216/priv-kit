@@ -23,7 +23,7 @@ private object Cfg {
     const val buildToolsVersion = "37.0.0"
     const val ndkVersion = "30.0.14904198"
     const val cmakeVersion = "4.1.2"
-    const val minSdk = 26
+    const val minSdk = 30
     val javaTargetVersion = JavaVersion.VERSION_11
     val kotlinJvmTarget = JvmTarget.fromTarget(javaTargetVersion.majorVersion)
     val kotlinLanguageVersion = KotlinVersion.KOTLIN_2_2

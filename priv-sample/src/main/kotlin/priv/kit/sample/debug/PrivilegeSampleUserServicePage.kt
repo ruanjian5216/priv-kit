@@ -1,5 +1,8 @@
 package priv.kit.sample.debug
 
+import hyper_ui.*
+import priv.kit.sample.ui.*
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -127,7 +129,7 @@ private fun UserServicePage(
 
 @Composable
 private fun UserServicePanel(state: PrivilegeSampleScreenState) {
-    val colors = MaterialTheme.colorScheme
+    val colors = SampleTheme.colorScheme
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -138,20 +140,20 @@ private fun UserServicePanel(state: PrivilegeSampleScreenState) {
     ) {
         RuntimeInfoRow(
             label = stringResource(R.string.sample_dedicated),
-            value = state.userServiceReferenceText(
+            value = state.userServiceReferenceHyperText(
                 bound = state.dedicatedUserServiceBound,
                 cached = state.dedicatedUserServiceCached,
             ),
         )
         RuntimeInfoRow(
             label = stringResource(R.string.sample_embedded),
-            value = state.userServiceReferenceText(
+            value = state.userServiceReferenceHyperText(
                 bound = state.embeddedUserServiceBound,
                 cached = state.embeddedUserServiceCached,
             ),
         )
         SelectionContainer {
-            BasicText(
+            HyperText(
                 text = buildString {
                     appendLine(state.userServiceMessage)
                     appendLine("dedicated: ${state.dedicatedUserServiceMessage}")
@@ -169,7 +171,7 @@ private fun UserServicePanel(state: PrivilegeSampleScreenState) {
 }
 
 @Composable
-private fun PrivilegeSampleScreenState.userServiceReferenceText(
+private fun PrivilegeSampleScreenState.userServiceReferenceHyperText(
     bound: Boolean,
     cached: Boolean,
 ): String =

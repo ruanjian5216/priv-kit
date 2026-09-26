@@ -1,5 +1,8 @@
 package priv.kit.sample.file
 
+import hyper_ui.*
+import priv.kit.sample.ui.*
+
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -14,17 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,7 +41,6 @@ import priv.kit.core.file.PrivilegeFileMetadata
 import priv.kit.sample.R
 import priv.kit.sample.common.toDiagnosticString
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PrivilegeSampleFilePage(
     serverRunning: Boolean,
@@ -88,24 +79,21 @@ internal fun PrivilegeSampleFilePage(
     }
 
     val actionsEnabled = serverRunning && !busy
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+    SampleScaffold(
+        containerColor = SampleTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
+            SampleTopBar(
                 navigationIcon = {
-                    TextButton(onClick = onBackToHome) {
-                        Text(stringResource(R.string.sample_home))
+                    SampleTextButton(onClick = onBackToHome) {
+                        HyperText(stringResource(R.string.sample_home))
                     }
                 },
                 title = {
-                    Text(
+                    HyperText(
                         text = stringResource(R.string.sample_test_file_api),
                         fontWeight = FontWeight.SemiBold,
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                ),
             )
         },
     ) { innerPadding ->
@@ -117,88 +105,88 @@ internal fun PrivilegeSampleFilePage(
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(
+            HyperText(
                 text = if (serverRunning) stringResource(R.string.sample_server_connected) else stringResource(R.string.sample_server_disconnected),
                 color = if (serverRunning) {
-                    MaterialTheme.colorScheme.tertiary
+                    SampleTheme.colorScheme.tertiary
                 } else {
-                    MaterialTheme.colorScheme.error
+                    SampleTheme.colorScheme.error
                 },
-                style = MaterialTheme.typography.titleMedium,
+                style = SampleTheme.typography.titleMedium,
             )
-            Text(
+            HyperText(
                 text = stringResource(R.string.sample_file_operations_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = SampleTheme.typography.bodyMedium,
+                color = SampleTheme.colorScheme.onSurfaceVariant,
             )
-            OutlinedTextField(
+            SampleOutlinedTextField(
                 value = directoryPath,
                 onValueChange = { directoryPath = it.replace('\n', ' ').replace('\r', ' ') },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !busy,
                 singleLine = true,
-                label = { Text(stringResource(R.string.sample_absolute_test_directory)) },
-                textStyle = MaterialTheme.typography.bodyMedium.copy(
+                label = { HyperText(stringResource(R.string.sample_absolute_test_directory)) },
+                textStyle = SampleTheme.typography.bodyMedium.copy(
                     fontFamily = FontFamily.Monospace,
                 ),
             )
-            Button(
+            HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = actionsEnabled,
                 onClick = {
                     runOperation("Full smoke test", ::runFullSmokeTest)
                 },
             ) {
-                Text(if (busy) stringResource(R.string.sample_running_progress) else stringResource(R.string.sample_run_full_smoke_test))
+                HyperText(if (busy) stringResource(R.string.sample_running_progress) else stringResource(R.string.sample_run_full_smoke_test))
             }
 
-            FileActionButton(stringResource(R.string.sample_inspect_test_paths), actionsEnabled) {
+            FileActionHyperButton(stringResource(R.string.sample_inspect_test_paths), actionsEnabled) {
                 runOperation("Inspect", ::inspectTestPaths)
             }
-            FileActionButton(stringResource(R.string.sample_create_directory_with_mkdir), actionsEnabled) {
+            FileActionHyperButton(stringResource(R.string.sample_create_directory_with_mkdir), actionsEnabled) {
                 runOperation("mkdir", ::createDirectory)
             }
-            FileActionButton(stringResource(R.string.sample_create_directory_with_mkdirs), actionsEnabled) {
+            FileActionHyperButton(stringResource(R.string.sample_create_directory_with_mkdirs), actionsEnabled) {
                 runOperation("mkdirs", ::createDirectories)
             }
-            FileActionButton(stringResource(R.string.sample_create_and_write_payload_txt), actionsEnabled) {
+            FileActionHyperButton(stringResource(R.string.sample_create_and_write_payload_txt), actionsEnabled) {
                 runOperation("Write", ::writePayload)
             }
-            FileActionButton(stringResource(R.string.sample_append_payload_txt), actionsEnabled) {
+            FileActionHyperButton(stringResource(R.string.sample_append_payload_txt), actionsEnabled) {
                 runOperation("Append", ::appendPayload)
             }
-            FileActionButton(stringResource(R.string.sample_atomically_replace_payload_txt), actionsEnabled) {
+            FileActionHyperButton(stringResource(R.string.sample_atomically_replace_payload_txt), actionsEnabled) {
                 runOperation("Atomic replace", ::replacePayloadAtomically)
             }
-            FileActionButton(stringResource(R.string.sample_read_payload_txt), actionsEnabled) {
+            FileActionHyperButton(stringResource(R.string.sample_read_payload_txt), actionsEnabled) {
                 runOperation("Read", ::readPayload)
             }
-            FileActionButton(stringResource(R.string.sample_rename_payload_txt_renamed_txt), actionsEnabled) {
+            FileActionHyperButton(stringResource(R.string.sample_rename_payload_txt_renamed_txt), actionsEnabled) {
                 runOperation("Rename", ::renamePayload)
             }
-            FileActionButton(stringResource(R.string.sample_walk_directory), actionsEnabled) {
+            FileActionHyperButton(stringResource(R.string.sample_walk_directory), actionsEnabled) {
                 runOperation("Directory walk", ::walkDirectory)
             }
-            OutlinedButton(
+            HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = actionsEnabled,
                 onClick = {
                     runOperation("Cleanup", ::cleanupTestPaths)
                 },
             ) {
-                Text(stringResource(R.string.sample_delete_test_files_and_directory))
+                HyperText(stringResource(R.string.sample_delete_test_files_and_directory))
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
-                TextButton(
+                SampleTextButton(
                     enabled = !busy,
                     onClick = { output = "" },
                 ) {
-                    Text(stringResource(R.string.sample_clear_output))
+                    HyperText(stringResource(R.string.sample_clear_output))
                 }
-                TextButton(
+                SampleTextButton(
                     enabled = !output.isNullOrBlank(),
                     onClick = {
                         val clipboard =
@@ -208,22 +196,22 @@ internal fun PrivilegeSampleFilePage(
                         )
                     },
                 ) {
-                    Text(stringResource(R.string.sample_copy_output))
+                    HyperText(stringResource(R.string.sample_copy_output))
                 }
             }
             SelectionContainer {
-                Text(
+                HyperText(
                     text = output?.ifBlank { stringResource(R.string.sample_empty) }
                         ?: stringResource(R.string.sample_file_intro),
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            color = SampleTheme.colorScheme.surfaceContainerHighest,
                             shape = RoundedCornerShape(8.dp),
                         )
                         .padding(16.dp),
                     fontFamily = FontFamily.Monospace,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = SampleTheme.typography.bodySmall,
                 )
             }
         }
@@ -231,17 +219,17 @@ internal fun PrivilegeSampleFilePage(
 }
 
 @Composable
-private fun FileActionButton(
+private fun FileActionHyperButton(
     label: String,
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
-    FilledTonalButton(
+    HyperButton(
         modifier = Modifier.fillMaxWidth(),
         enabled = enabled,
         onClick = onClick,
     ) {
-        Text(label)
+        HyperText(label)
     }
 }
 
@@ -349,7 +337,7 @@ private suspend fun walkDirectory(directoryPath: String): String {
         entries.take(MAX_DISPLAYED_ENTRIES).forEach { entry ->
             appendLine(
                 "depth=${entry.depth} " + (
-                    entry.metadata?.toDisplayText()
+                    entry.metadata?.toDisplayHyperText()
                         ?: "${entry.absolutePath} metadata=unavailable"
                     ),
             )
@@ -414,7 +402,7 @@ private suspend fun runFullSmokeTest(directoryPath: String): String {
         check(payload.exists() && payload.isFile()) { "$payload is not a regular file" }
         check(!payload.isDirectory()) { "$payload was reported as a directory" }
         val metadata = payload.metadata()
-        lines += "PASS query/stat: ${metadata.toDisplayText()}"
+        lines += "PASS query/stat: ${metadata.toDisplayHyperText()}"
         lines += "permissions read=${payload.canRead()} write=${payload.canWrite()} " +
             "execute=${payload.canExecute()} symbolicLink=${payload.isSymbolicLink()}"
         lines += "length=${payload.length()} lastModified=${payload.lastModified()} " +
@@ -500,11 +488,11 @@ private fun describeFile(file: PrivilegeFile): String {
                 "symbolicLink=${file.isSymbolicLink()} hidden=${file.isHidden()}",
         )
         appendLine("length=${file.length()} lastModified=${file.lastModified()}")
-        append(metadata.toDisplayText())
+        append(metadata.toDisplayHyperText())
     }
 }
 
-private fun PrivilegeFileMetadata.toDisplayText(): String =
+private fun PrivilegeFileMetadata.toDisplayHyperText(): String =
     "$absolutePath type=$type size=$sizeBytes mode=0${unixMode.toString(8)} uid=$uid gid=$gid"
 
 private fun deleteIfPresent(file: PrivilegeFile): Boolean =

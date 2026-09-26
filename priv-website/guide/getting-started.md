@@ -6,7 +6,7 @@ description: Add Priv Kit to an Android application and start the first app-owne
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.priv-kit/priv-core.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.priv-kit/priv-core)
 
-Priv Kit targets Android API 26 and later. It gives one application the
+Priv Kit targets Android API 30 and later. It gives one application the
 primitives to start, connect to, and use its own Privileged Server. Applications
 can use the built-in file proxy, build privileged operations directly on
 Binder, or define their own UserService contracts.
@@ -31,37 +31,10 @@ dependencies {
 }
 ```
 
-## Configure native library packaging {#native-library-packaging}
+## Native library packaging {#native-library-packaging}
 
-Apps that support Android versions below 10 must set `useLegacyPackaging` to
-`true`:
-
-```kotlin
-android {
-    packaging {
-        jniLibs {
-            useLegacyPackaging = true
-        }
-    }
-}
-```
-
-Android 10 and later have no such restriction. Priv Kit uses the startup command
-that matches the value of `useLegacyPackaging`.
-
-For example, on an arm64 device:
-
-`useLegacyPackaging = true`:
-
-```shell
-adb shell /data/app/.../lib/arm64/libprivkitstarter.so
-```
-
-`useLegacyPackaging = false`:
-
-```shell
-adb shell /system/bin/linker64 '/data/app/.../base.apk!/lib/arm64-v8a/libprivkitstarter.so'
-```
+The library targets Android 11 (API 30) and later and uses the APK linker path
+for uncompressed native libraries.
 
 ## Configure hidden API access {#hidden-api-access}
 

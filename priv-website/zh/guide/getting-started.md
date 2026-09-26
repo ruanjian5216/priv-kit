@@ -6,7 +6,7 @@ description: 将 Priv Kit 接入 Android 应用，并启动第一个应用自有
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.priv-kit/priv-core.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.priv-kit/priv-core)
 
-Priv Kit 支持 Android API 26 及以上版本。它为单个应用提供启动、连接并使用
+Priv Kit 支持 Android API 30 及以上版本。它为单个应用提供启动、连接并使用
 自有 Privileged Server 的基础能力。应用可以使用内置文件代理、通过 Binder 或
 自己的 UserService 实现特权功能。
 
@@ -31,34 +31,7 @@ dependencies {
 
 ## 配置 native 库打包 {#native-library-packaging}
 
-支持 Android 10 以下版本时，将 `useLegacyPackaging` 设置为 `true`：
-
-```kotlin
-android {
-    packaging {
-        jniLibs {
-            useLegacyPackaging = true
-        }
-    }
-}
-```
-
-Android 10 及以上版本没有此限制。Priv Kit 会根据 `useLegacyPackaging` 的值使用
-对应的启动命令。
-
-以 arm64 设备为例：
-
-`useLegacyPackaging = true`：
-
-```shell
-adb shell /data/app/.../lib/arm64/libprivkitstarter.so
-```
-
-`useLegacyPackaging = false`：
-
-```shell
-adb shell /system/bin/linker64 '/data/app/.../base.apk!/lib/arm64-v8a/libprivkitstarter.so'
-```
+项目只支持 Android 11（API 30）及以上，使用未压缩 native 库的 APK linker 路径启动。
 
 ## 配置 hidden API 访问 {#hidden-api-access}
 

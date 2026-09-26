@@ -13,15 +13,12 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.ScaffoldDefaults
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -54,15 +51,8 @@ public fun PrivilegeScaffold(
     topBar: @Composable () -> Unit = {
         PrivilegeAndroidTopBar(viewModel)
     },
-    bottomBar: @Composable () -> Unit = {},
-    snackbarHost: @Composable (SnackbarHostState) -> Unit = {
-        SnackbarHost(it)
-    },
-    floatingActionButton: @Composable () -> Unit = {},
-    floatingActionButtonPosition: FabPosition = FabPosition.End,
     containerColor: Color = HyperColors.pageBackground,
-    contentColor: Color = contentColorFor(containerColor),
-    contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
+    contentColor: Color = HyperColors.primaryText,
     onViewPermissionSolutions: (() -> Unit)? = null,
 ) {
     val activity = LocalActivity.current!!
@@ -119,12 +109,13 @@ public fun PrivilegeScaffold(
             )
         }
     }
-    val snackbarHostState = remember { SnackbarHostState() }
     val snackbarScope = rememberCoroutineScope()
+    var feedbackMessage by remember { mutableStateOf<String?>(null) }
     fun showFeedback(message: String) {
+        feedbackMessage = message
         snackbarScope.launch {
-            snackbarHostState.currentSnackbarData?.dismiss()
-            snackbarHostState.showSnackbar(message = message)
+            kotlinx.coroutines.delay(2600)
+            feedbackMessage = null
         }
     }
     val batteryOptimizationPromptVisible by viewModel.batteryOptimizationPromptVisible.collectAsStateWithLifecycle()
@@ -193,8 +184,7 @@ public fun PrivilegeScaffold(
     }
     LaunchedEffect(Unit) {
         viewModel.snackbarTexts.collect { text ->
-            snackbarHostState.currentSnackbarData?.dismiss()
-            snackbarHostState.showSnackbar(message = text.asString(context))
+            showFeedback(text.asString(context))
         }
     }
     LifecycleEventEffect(
@@ -242,14 +232,9 @@ public fun PrivilegeScaffold(
             screenScope = screenScope,
             modifier = Modifier.fillMaxSize(),
             topBar = topBar,
-            bottomBar = bottomBar,
-            snackbarHost = snackbarHost,
-            snackbarHostState = snackbarHostState,
-            floatingActionButton = floatingActionButton,
-            floatingActionButtonPosition = floatingActionButtonPosition,
             containerColor = containerColor,
             contentColor = contentColor,
-            contentWindowInsets = contentWindowInsets,
+            feedbackMessage = feedbackMessage,
         )
         PrivilegeSystemPromptOverlay(
             prompt = visibleSystemPrompt
