@@ -1,75 +1,46 @@
-import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
-import com.android.build.api.variant.KotlinMultiplatformAndroidComponentsExtension
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.kotlin.multiplatform.library) apply false
-    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
 }
 
-val skipAndroid = providers.environmentVariable("PRIV_KIT_SKIP_ANDROID").isPresent
-if (!skipAndroid) {
-    pluginManager.apply("com.android.kotlin.multiplatform.library")
-}
+android {
+    namespace = "priv.kit.ui"
 
-kotlin {
-    targets.withType<KotlinMultiplatformAndroidLibraryTarget>().configureEach {
-        namespace = "priv.kit.ui"
-        androidResources.enable = true
-        withHostTest { isIncludeAndroidResources = true }
-        localDependencySelection { selectBuildTypeFrom.set(listOf("debug", "release")) }
+    defaultConfig {
+        minSdk = 26
     }
-    jvm()
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs { browser() }
 
-    sourceSets {
-        commonMain.dependencies {
-            api(libs.compose.multiplatform.foundation)
-            api(libs.compose.multiplatform.material3)
-            api(libs.compose.multiplatform.runtime)
-            api(libs.compose.multiplatform.ui)
-            implementation(libs.compose.multiplatform.resources)
-            implementation(libs.kotlinx.coroutines.core)
-        }
-        commonTest.dependencies { implementation(libs.kotlin.test) }
-        jvmTest.dependencies {
-            implementation(libs.kotlinx.coroutines.test)
-            runtimeOnly(compose.desktop.currentOs)
-        }
-        if (!skipAndroid) {
-            getByName("androidMain").dependencies {
-                api(project(":priv-core"))
-                implementation(project(":priv-shared"))
-                implementation(libs.androidx.activity.compose)
-                implementation(libs.androidx.core.ktx)
-                api(libs.androidx.lifecycle.viewmodel)
-                implementation(libs.androidx.lifecycle.runtime.compose)
-                implementation(libs.androidx.lifecycle.runtime.ktx)
-                implementation(libs.androidx.lifecycle.viewmodel.compose)
-                api(libs.androidx.lifecycle.service)
-                compileOnly(libs.androidx.annotation)
-            }
-            getByName("androidHostTest").dependencies {
-                implementation(libs.junit)
-                implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.robolectric)
-            }
-        }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    buildFeatures {
+        compose = true
     }
 }
 
-compose.resources {
-    packageOfResClass = "priv.kit.ui.resources"
-}
+dependencies {
+    api(project(":priv-core"))
+    implementation(project(":priv-shared"))
 
-// The same XML strings serve Compose resources and Android's synchronous notification text.
-pluginManager.withPlugin("com.android.kotlin.multiplatform.library") {
-    extensions.configure<KotlinMultiplatformAndroidComponentsExtension> {
-        onVariants { variant ->
-            variant.sources.res?.addStaticSourceDirectory("src/commonMain/composeResources")
-        }
-    }
+    // 重构后的 UI 基于本地 hyper-ui 组件库构建。
+    implementation(libs.hyper.ui)
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.material3)
+
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.ktx)
+    api(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    api(libs.androidx.lifecycle.service)
+    compileOnly(libs.androidx.annotation)
+
+    implementation(libs.kotlinx.coroutines.android)
 }

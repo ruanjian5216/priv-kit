@@ -12,6 +12,8 @@ android {
         applicationId = "priv.kit.sample"
         versionCode = 1
         versionName = project.version.toString()
+        // 重构后 priv-ui 依赖 hyper-ui（minSdk 30），应用整体 minSdk 随之上调。
+        minSdk = 30
     }
 
     flavorDimensions += "nativePackaging"
@@ -25,7 +27,6 @@ android {
         create("api29") {
             dimension = "nativePackaging"
             applicationIdSuffix = ".api29"
-            minSdk = 29
         }
     }
 
@@ -86,5 +87,4 @@ dependencies {
     implementation(libs.hiddenapibypass)
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
-    testImplementation(libs.junit)
 }

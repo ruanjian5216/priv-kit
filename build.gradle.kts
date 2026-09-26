@@ -1,12 +1,10 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
-import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryPlugin
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.gradle.api.plugins.JavaPluginExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -16,9 +14,6 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.compose) apply false
-    alias(libs.plugins.kotlin.multiplatform) apply false
-    alias(libs.plugins.android.kotlin.multiplatform.library) apply false
-    alias(libs.plugins.compose.multiplatform) apply false
     alias(libs.plugins.maven.publish) apply false
     alias(libs.plugins.remap) apply false
 }
@@ -74,21 +69,6 @@ subprojects {
         extensions.getByType(JavaPluginExtension::class.java).apply {
             sourceCompatibility = Cfg.javaTargetVersion
             targetCompatibility = Cfg.javaTargetVersion
-        }
-    }
-
-    plugins.withId("org.jetbrains.kotlin.multiplatform") {
-        configureExplicitApi()
-        extensions.configure(KotlinMultiplatformExtension::class.java) {
-            compilerOptions {
-                languageVersion.set(Cfg.kotlinLanguageVersion)
-                apiVersion.set(Cfg.kotlinLanguageVersion)
-            }
-            targets.withType(KotlinMultiplatformAndroidLibraryTarget::class.java).configureEach {
-                compileSdk = Cfg.compileSdk
-                minSdk = Cfg.minSdk
-                compilerOptions.jvmTarget.set(Cfg.kotlinJvmTarget)
-            }
         }
     }
 

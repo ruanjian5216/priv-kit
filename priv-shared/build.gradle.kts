@@ -10,6 +10,4 @@ android {
 dependencies {
     compileOnly(project(":hidden-api"))
     compileOnly(libs.androidx.annotation)
-    testImplementation(libs.junit)
-    testImplementation(libs.robolectric)
 }
