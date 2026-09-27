@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -123,29 +124,17 @@ private fun DestinationTabs(
     LazyRow(state = listState, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         items(PrivilegeSampleDebugDestination.entries, key = { it.titleRes }) { destination ->
             val selected = destination == selectedDestination
-            Box(
-                modifier = Modifier
-                    .heightIn(min = 48.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(if (selected) colors.primary else colors.surfaceContainerHighest)
-                    .clickable(enabled = !busy || selected, role = Role.Tab) {
-                        onDestinationSelected(destination)
-                    }
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                contentAlignment = Alignment.Center,
+            HyperButton(
+                onClick = { onDestinationSelected(destination) },
+                enabled = !busy || selected,
+                variant = if (selected) HyperButtonVariant.Filled else HyperButtonVariant.Tonal,
+                height = 48.dp,
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                role = Role.Tab,
             ) {
                 HyperText(
                     text = stringResource(destination.titleRes),
                     maxLines = 1,
-                    style = TextStyle(
-                        color = when {
-                            selected -> colors.onPrimary
-                            busy -> colors.onSurface.copy(alpha = 0.38f)
-                            else -> colors.onSurface
-                        },
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                    ),
                 )
             }
         }
@@ -158,31 +147,16 @@ internal fun SampleTopBarAction(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
-    val colors = SampleTheme.colorScheme
-    val background = if (enabled) colors.primary else colors.onSurface.copy(alpha = 0.12f)
-    val foreground = if (enabled) colors.onPrimary else colors.onSurface.copy(alpha = 0.38f)
-    Box(
-        modifier = Modifier
-            .height(40.dp)
-            .widthIn(min = 104.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(background)
-            .clickable(
-                enabled = enabled,
-                role = Role.Button,
-                onClick = onClick,
-            )
-            .padding(horizontal = 12.dp),
-        contentAlignment = Alignment.Center,
+    HyperButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = Modifier.widthIn(min = 104.dp),
+        height = 40.dp,
+        variant = HyperButtonVariant.Filled,
+        role = Role.Button,
     ) {
         HyperText(
             text = label,
-            style = TextStyle(
-                color = foreground,
-                fontFamily = FontFamily.SansSerif,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-            ),
         )
     }
 }
@@ -329,38 +303,23 @@ internal fun SampleAction(
     modifier: Modifier,
     onClick: () -> Unit,
 ) {
-    val colors = SampleTheme.colorScheme
-    val enabledColors = when (tone) {
-        SampleActionTone.Primary -> colors.primary to colors.onPrimary
-        SampleActionTone.Secondary -> colors.secondary to colors.onSecondary
-        SampleActionTone.Tonal -> colors.secondaryContainer to colors.onSecondaryContainer
-        SampleActionTone.Destructive -> colors.error to colors.onError
-        SampleActionTone.Neutral -> colors.surfaceContainerHighest to colors.onSurface
+    val variant = when (tone) {
+        SampleActionTone.Primary -> HyperButtonVariant.Filled
+        SampleActionTone.Secondary -> HyperButtonVariant.Outline
+        SampleActionTone.Tonal -> HyperButtonVariant.Tonal
+        SampleActionTone.Destructive -> HyperButtonVariant.Danger
+        SampleActionTone.Neutral -> HyperButtonVariant.Ghost
     }
-    val actualBackground = if (enabled) enabledColors.first else colors.onSurface.copy(alpha = 0.12f)
-    val actualForeground = if (enabled) enabledColors.second else colors.onSurface.copy(alpha = 0.38f)
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(48.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(actualBackground)
-            .clickable(
-                enabled = enabled,
-                role = Role.Button,
-                onClick = onClick,
-            )
-            .padding(horizontal = 12.dp),
-        contentAlignment = Alignment.Center,
+    HyperButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier.fillMaxWidth(),
+        height = 48.dp,
+        variant = variant,
+        role = Role.Button,
     ) {
         HyperText(
             text = label,
-            style = TextStyle(
-                color = actualForeground,
-                fontFamily = FontFamily.SansSerif,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-            ),
         )
     }
 }

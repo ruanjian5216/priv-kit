@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonTone
+import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperColors
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperPanel
@@ -121,7 +121,7 @@ fun SampleTextButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    tone = HyperButtonTone.Plain,
+    variant = HyperButtonVariant.Ghost,
     content = content,
 )
 
