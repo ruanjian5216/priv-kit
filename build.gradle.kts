@@ -2,19 +2,31 @@ import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryPlugin
-import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.gradle.api.plugins.JavaPluginExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
+// vanniktech 发布插件只在显式发布（-Pprivkit.publish）时才加入 classpath。
+// 日常构建以及被 skipad 通过 includeBuild 消费时都不解析该插件，
+// 否则其 central-portal 组件会把 retrofit/okhttp/moshi 等与编译无关的
+// 传递依赖拉到 buildscript classpath 并触发下载。
+buildscript {
+    val publishing = providers.gradleProperty("privkit.publish").isPresent
+    dependencies {
+        if (publishing) {
+            // 版本与 gradle/libs.versions.toml 中的 maven-publish 保持一致。
+            classpath("com.vanniktech:gradle-maven-publish-plugin:0.37.0")
+        }
+    }
+}
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.compose) apply false
-    alias(libs.plugins.maven.publish) apply false
     alias(libs.plugins.remap) apply false
 }
 
@@ -42,8 +54,11 @@ allprojects {
 }
 
 subprojects {
-    if (name in publishedModuleNames) {
-        pluginManager.apply("com.vanniktech.maven.publish")
+    // 发布相关配置（vanniktech 插件 apply 与 POM 配置）整体抽到独立脚本中，
+    // 仅在带 -Pprivkit.publish 参数时加载；这样根构建脚本不再 import
+    // vanniktech 的任何类型，日常构建的 classpath 上完全没有该插件。
+    if (name in publishedModuleNames && providers.gradleProperty("privkit.publish").isPresent) {
+        apply(from = "${rootProject.rootDir}/gradle/publish-conventions.gradle.kts")
     }
 
     fun configureExplicitApi() {
@@ -118,39 +133,6 @@ subprojects {
             externalNativeBuild {
                 cmake {
                     version = Cfg.cmakeVersion
-                }
-            }
-        }
-    }
-
-    pluginManager.withPlugin("com.vanniktech.maven.publish") {
-        configure<MavenPublishBaseExtension> {
-            coordinates(project.group.toString(), project.name, project.version.toString())
-            if (project.providers.gradleProperty("signing.keyId").isPresent) {
-                publishToMavenCentral()
-                signAllPublications()
-            }
-
-            val repoUrl = "https://github.com/priv-kit/priv-kit"
-            pom {
-                name.set("Priv Kit")
-                description.set("Self-managed privileged runtime for Android apps.")
-                url.set(repoUrl)
-                licenses {
-                    license {
-                        name.set("The Apache Software License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                developers {
-                    developer {
-                        name.set("lisonge")
-                        email.set("i@songe.li")
-                        url.set("https://github.com/lisonge")
-                    }
-                }
-                scm {
-                    url.set(repoUrl)
                 }
             }
         }

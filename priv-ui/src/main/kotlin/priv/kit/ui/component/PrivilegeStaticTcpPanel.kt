@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperAlertDialog
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonTone
+import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperColors
 import hyper_ui.HyperDialog
 import hyper_ui.HyperIcon
@@ -182,7 +182,7 @@ internal fun PrivilegeUiScreenScope.StaticTcpAdbSection() {
         if (prepareActionVisible) {
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 enabled = prepareActionEnabled,
                 onClick = actions.enableTcpMode,
             ) {
@@ -195,7 +195,7 @@ internal fun PrivilegeUiScreenScope.StaticTcpAdbSection() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             HyperButton(
-                tone = HyperButtonTone.Outline,
+                variant = HyperButtonVariant.Outline,
                 enabled = controlActionAvailable && (!state.staticTcp.loaded || staticTcpActive),
                 onClick = {
                     if (!state.staticTcp.loaded) {
@@ -244,7 +244,7 @@ internal fun PrivilegeUiScreenScope.StaticTcpAdbSection() {
                 CommandBlock(staticTcpCommand)
                 HyperButton(
                     modifier = Modifier.fillMaxWidth(),
-                    tone = HyperButtonTone.Outline,
+                    variant = HyperButtonVariant.Outline,
                     enabled = adbInteractionEnabled &&
                         !runtimeStartInProgress &&
                         !state.busy,

@@ -45,4 +45,6 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 remap = { id = "li.songe.remap", version.ref = "remap" }
+# 发布插件不在 plugins{} 块中声明（否则日常构建也会强制下载）；
+# 仅在 -Pprivkit.publish 时由根 build.gradle.kts 按需加入 classpath，版本需与那里保持一致。
 maven-publish = "com.vanniktech.maven.publish:0.37.0"

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonTone
+import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperIcon
 import hyper_ui.HyperIconButton
 import hyper_ui.HyperText
@@ -61,7 +61,7 @@ internal fun PrivilegeUiScreenScope.AuthorizationModeTabs() {
             HyperButton(
                 enabled = item.enabled,
                 onClick = { actions.selectStartupMode(item.mode) },
-                tone = if (item.selected) HyperButtonTone.Primary else HyperButtonTone.Plain,
+                variant = if (item.selected) HyperButtonVariant.Filled else HyperButtonVariant.Ghost,
             ) {
                 HyperText(
                     text = stringResource(item.mode.labelRes()),
