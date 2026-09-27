@@ -195,6 +195,20 @@ internal class PrivilegeUiAdbStatusActions(
 
     private suspend fun refreshWirelessAdbStatus(markChecking: Boolean): Unit =
         wirelessRefresh.run {
+            if (!store.hasAdbLocalNetworkPermission()) {
+                // Android may open the NSD device picker for every discovery without this permission.
+                // Passive status refreshes must wait for the user to grant it.
+                closePairingSession()
+                store.updateState {
+                    it.copy(
+                        wifiConnected = store.isWifiConnected(),
+                        wirelessDebuggingStatus = PrivilegeUiWirelessAdbStatus.UNKNOWN,
+                        wirelessPairingServiceStatus = PrivilegeUiWirelessAdbStatus.UNKNOWN,
+                        wirelessPairingCheckStatus = PrivilegeUiWirelessAdbStatus.UNKNOWN,
+                    )
+                }
+                return@run
+            }
             if (markChecking) markWirelessAdbStatusChecking()
             try {
                 pollWirelessAdbStatusOnce()
