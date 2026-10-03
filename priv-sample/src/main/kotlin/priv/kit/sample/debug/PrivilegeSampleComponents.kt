@@ -127,8 +127,8 @@ private fun DestinationTabs(
             HyperButton(
                 onClick = { onDestinationSelected(destination) },
                 enabled = !busy || selected,
-                variant = if (selected) HyperButtonVariant.Filled else HyperButtonVariant.Tonal,
-                height = 48.dp,
+                type = if (selected) "filled" else "tonal",
+                size = "large",
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 role = Role.Tab,
             ) {
@@ -151,8 +151,6 @@ internal fun SampleTopBarAction(
         onClick = onClick,
         enabled = enabled,
         modifier = Modifier.widthIn(min = 104.dp),
-        height = 40.dp,
-        variant = HyperButtonVariant.Filled,
         role = Role.Button,
     ) {
         HyperText(
@@ -303,19 +301,19 @@ internal fun SampleAction(
     modifier: Modifier,
     onClick: () -> Unit,
 ) {
-    val variant = when (tone) {
-        SampleActionTone.Primary -> HyperButtonVariant.Filled
-        SampleActionTone.Secondary -> HyperButtonVariant.Outline
-        SampleActionTone.Tonal -> HyperButtonVariant.Tonal
-        SampleActionTone.Destructive -> HyperButtonVariant.Danger
-        SampleActionTone.Neutral -> HyperButtonVariant.Ghost
+    val type = when (tone) {
+        SampleActionTone.Primary -> "filled"
+        SampleActionTone.Secondary -> "outline"
+        SampleActionTone.Tonal -> "tonal"
+        SampleActionTone.Destructive -> "danger"
+        SampleActionTone.Neutral -> "ghost"
     }
     HyperButton(
         onClick = onClick,
         enabled = enabled,
         modifier = modifier.fillMaxWidth(),
-        height = 48.dp,
-        variant = variant,
+        size = "large",
+        type = type,
         role = Role.Button,
     ) {
         HyperText(

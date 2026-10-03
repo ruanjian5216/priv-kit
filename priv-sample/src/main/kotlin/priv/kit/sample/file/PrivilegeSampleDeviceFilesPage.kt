@@ -225,7 +225,7 @@ private fun DeviceDirectoryContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    hyper_ui.HyperCircularProgressIndicator(progress = null)
+                    hyper_ui.HyperProgress(type = "circular")
                 }
             }
         }
@@ -418,7 +418,7 @@ private fun DeviceFilePreviewContent(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center,
         ) {
-            hyper_ui.HyperCircularProgressIndicator(progress = null)
+            hyper_ui.HyperProgress(type = "circular")
         }
 
         is PrivilegeSampleFilePreview.Error -> DeviceFilesStatusPanel(

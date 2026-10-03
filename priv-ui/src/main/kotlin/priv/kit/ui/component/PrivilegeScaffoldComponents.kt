@@ -35,12 +35,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperAlertDialog
+import hyper_ui.HyperButtonDefaults
+import hyper_ui.HyperCard
+import hyper_ui.HyperCardColors
 import hyper_ui.HyperColors
 import hyper_ui.HyperIcon
-import hyper_ui.HyperIconButton
-import hyper_ui.HyperIconButtonDefaults
-import hyper_ui.HyperPanel
-import hyper_ui.HyperPanelColors
 import hyper_ui.HyperText
 import hyper_ui.HyperTheme
 import hyper_ui.LocalHyperContentColor
@@ -64,10 +63,10 @@ internal fun hyperSuccessContainer(): Color =
 
 @Composable
 internal fun Panel(content: @Composable ColumnScope.() -> Unit) {
-    HyperPanel(
+    HyperCard(
         modifier = Modifier.fillMaxWidth(),
         contentModifier = Modifier.padding(PrivilegeUiSpacing.large),
-        colors = HyperPanelColors(containerColor = HyperColors.softContainer),
+        colors = HyperCardColors(containerColor = HyperColors.softContainer),
         shape = HyperTheme.shapes.medium,
         verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.medium),
         content = content,
@@ -76,10 +75,10 @@ internal fun Panel(content: @Composable ColumnScope.() -> Unit) {
 
 @Composable
 internal fun ItemPanel(content: @Composable ColumnScope.() -> Unit) {
-    HyperPanel(
+    HyperCard(
         modifier = Modifier.fillMaxWidth(),
         contentModifier = Modifier.padding(PrivilegeUiSpacing.medium),
-        colors = HyperPanelColors(containerColor = HyperColors.fieldContainer),
+        colors = HyperCardColors(containerColor = HyperColors.fieldContainer),
         shape = HyperTheme.shapes.small,
         verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.small),
         content = content,
@@ -129,12 +128,12 @@ internal fun PrivilegeUiScreenScope.PermissionRestrictionWarning() {
         )
     }
     CompositionLocalProvider(LocalHyperContentColor provides HyperColors.danger) {
-        HyperPanel(
+        HyperCard(
             modifier = Modifier.fillMaxWidth(),
             contentModifier = Modifier
                 .fillMaxWidth()
                 .padding(PrivilegeUiSpacing.large),
-            colors = HyperPanelColors(containerColor = hyperDangerContainer()),
+            colors = HyperCardColors(containerColor = hyperDangerContainer()),
             shape = HyperTheme.shapes.medium,
             verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.extraSmall),
         ) {
@@ -214,7 +213,7 @@ internal fun CommandBlock(commandLine: String) {
 @Composable
 internal fun PrivilegeUiScreenScope.AutoRecoveryWarning() {
     CompositionLocalProvider(LocalHyperContentColor provides HyperColors.primaryText) {
-        HyperPanel(
+        HyperCard(
             modifier = Modifier.fillMaxWidth(),
             contentModifier = Modifier
                 .fillMaxWidth()
@@ -222,7 +221,7 @@ internal fun PrivilegeUiScreenScope.AutoRecoveryWarning() {
                     horizontal = PrivilegeUiSpacing.large,
                     vertical = PrivilegeUiSpacing.medium,
                 ),
-            colors = HyperPanelColors(containerColor = HyperColors.softContainer),
+            colors = HyperCardColors(containerColor = HyperColors.softContainer),
             shape = HyperTheme.shapes.medium,
         ) {
             Column(
@@ -389,7 +388,7 @@ internal fun PrivilegeUiScreenScope.ServiceStatusPanel() {
     }
 
     CompositionLocalProvider(LocalHyperContentColor provides foreground) {
-        HyperPanel(
+        HyperCard(
             modifier = Modifier.fillMaxWidth(),
             contentModifier = Modifier
                 .fillMaxWidth()
@@ -399,7 +398,7 @@ internal fun PrivilegeUiScreenScope.ServiceStatusPanel() {
                     end = PrivilegeUiSpacing.medium,
                     bottom = PrivilegeUiSpacing.medium,
                 ),
-            colors = HyperPanelColors(containerColor = background),
+            colors = HyperCardColors(containerColor = background),
             shape = HyperTheme.shapes.medium,
         ) {
             Row(
@@ -429,19 +428,21 @@ internal fun PrivilegeUiScreenScope.ServiceStatusPanel() {
                     text = iconDescription,
                     modifier = Modifier,
                 ) {
-                    HyperIconButton(
+                    HyperButton(
                         modifier = Modifier.size(PrivilegeUiSize.minimumTouchTarget),
                         enabled = interactionEnabled &&
                             privilegeUiServiceStatusActionEnabled(
                                 action = action,
                                 busy = state.busy,
                             ),
-                        colors = HyperIconButtonDefaults.colors(
+                        type = "icon",
+                        colors = HyperButtonDefaults.colors(
+                            type = "icon",
                             containerColor = actionContainer,
                             contentColor = actionForeground,
                         ),
                         onClick = {
-                            if (!actions.canInteract()) return@HyperIconButton
+                            if (!actions.canInteract()) return@HyperButton
                             when (action) {
                                 PrivilegeUiServiceStatusAction.STOP -> showStopConfirmation = true
                                 PrivilegeUiServiceStatusAction.CANCEL -> actions.stopCurrentStart()
@@ -521,11 +522,12 @@ internal fun PrivilegeUiScreenScope.StartupLogPanel() {
                 text = copyLogDescription,
                 modifier = Modifier,
             ) {
-                HyperIconButton(
+                HyperButton(
                     modifier = Modifier.size(PrivilegeUiSize.minimumTouchTarget),
                     enabled = interactionEnabled && lines.isNotEmpty(),
+                    type = "icon",
                     onClick = {
-                        if (!actions.canInteract()) return@HyperIconButton
+                        if (!actions.canInteract()) return@HyperButton
                         actions.copyStartupLog()
                         showFeedback(copiedMessage)
                     },
@@ -542,11 +544,12 @@ internal fun PrivilegeUiScreenScope.StartupLogPanel() {
                 text = closeLogDescription,
                 modifier = Modifier,
             ) {
-                HyperIconButton(
+                HyperButton(
                     modifier = Modifier.size(PrivilegeUiSize.minimumTouchTarget),
                     enabled = interactionEnabled,
+                    type = "icon",
                     onClick = {
-                        if (!actions.canInteract()) return@HyperIconButton
+                        if (!actions.canInteract()) return@HyperButton
                         actions.clearStartupLog()
                     },
                 ) {

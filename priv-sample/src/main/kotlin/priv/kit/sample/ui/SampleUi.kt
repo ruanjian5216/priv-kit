@@ -26,11 +26,9 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonVariant
+import hyper_ui.HyperCard
+import hyper_ui.HyperCardColors
 import hyper_ui.HyperColors
-import hyper_ui.HyperIconButton
-import hyper_ui.HyperPanel
-import hyper_ui.HyperPanelColors
 import hyper_ui.HyperText
 import hyper_ui.HyperTextField
 import hyper_ui.HyperTheme
@@ -121,7 +119,7 @@ fun SampleTextButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    variant = HyperButtonVariant.Ghost,
+    type = "ghost",
     content = content,
 )
 
@@ -148,10 +146,10 @@ fun SampleOutlinedTextField(
     modifier = modifier,
     enabled = enabled,
     readOnly = readOnly,
+    type = if (singleLine) "text" else "textarea",
+    rows = minLines,
     labelContent = label?.let { { it() } },
     placeholderContent = placeholder,
-    singleLine = singleLine,
-    minLines = minLines,
     supportingContent = supportingText?.let { { it() } },
     isError = isError,
     keyboardOptions = keyboardOptions,
@@ -168,9 +166,9 @@ fun SampleCard(
     leadingContent: (@Composable () -> Unit)? = null,
     content: (@Composable () -> Unit)? = null,
 ) {
-    HyperPanel(
+    HyperCard(
         modifier = modifier,
-        colors = HyperPanelColors(containerColor = HyperColors.cardContainer),
+        colors = HyperCardColors(containerColor = HyperColors.cardContainer),
         shape = RoundedCornerShape(16.dp),
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {

@@ -113,7 +113,6 @@ internal fun PrivilegeUiScreenScope.WirelessAdbPairingDialog() {
                     labelContent = {
                         HyperText(stringResource(R.string.priv_ui_pairing_code))
                     },
-                    singleLine = true,
                 )
             }
         },

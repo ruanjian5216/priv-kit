@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperColors
 import hyper_ui.HyperText
 import priv.kit.ui.PrivilegeUiRuntimeStartPhase
@@ -67,7 +66,7 @@ internal fun PrivilegeUiScreenScope.WirelessAdbSection() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             HyperButton(
-                variant = HyperButtonVariant.Outline,
+                type = "outline",
                 enabled = pairingActionEnabled,
                 onClick = actions.startNotificationPairing,
             ) {

@@ -22,13 +22,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperAlertDialog
-import hyper_ui.HyperButton
-import hyper_ui.HyperButtonVariant
+import hyper_ui.HyperCard
+import hyper_ui.HyperCardColors
 import hyper_ui.HyperColors
 import hyper_ui.HyperDialog
 import hyper_ui.HyperIcon
-import hyper_ui.HyperPanel
-import hyper_ui.HyperPanelColors
 import hyper_ui.HyperText
 import hyper_ui.HyperTheme
 import hyper_ui.LocalHyperContentColor
@@ -182,7 +180,7 @@ internal fun PrivilegeUiScreenScope.StaticTcpAdbSection() {
         if (prepareActionVisible) {
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
-                variant = HyperButtonVariant.Outline,
+                type = "outline",
                 enabled = prepareActionEnabled,
                 onClick = actions.enableTcpMode,
             ) {
@@ -195,7 +193,7 @@ internal fun PrivilegeUiScreenScope.StaticTcpAdbSection() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             HyperButton(
-                variant = HyperButtonVariant.Outline,
+                type = "outline",
                 enabled = controlActionAvailable && (!state.staticTcp.loaded || staticTcpActive),
                 onClick = {
                     if (!state.staticTcp.loaded) {
@@ -244,7 +242,7 @@ internal fun PrivilegeUiScreenScope.StaticTcpAdbSection() {
                 CommandBlock(staticTcpCommand)
                 HyperButton(
                     modifier = Modifier.fillMaxWidth(),
-                    variant = HyperButtonVariant.Outline,
+                    type = "outline",
                     enabled = adbInteractionEnabled &&
                         !runtimeStartInProgress &&
                         !state.busy,
@@ -335,12 +333,12 @@ private fun StaticTcpControlDialog(
 @Composable
 private fun AdbConnectionWarning() {
     CompositionLocalProvider(LocalHyperContentColor provides HyperColors.danger) {
-        HyperPanel(
+        HyperCard(
             modifier = Modifier.fillMaxWidth(),
             contentModifier = Modifier
                 .fillMaxWidth()
                 .padding(PrivilegeUiSpacing.medium),
-            colors = HyperPanelColors(containerColor = hyperDangerContainer()),
+            colors = HyperCardColors(containerColor = hyperDangerContainer()),
             shape = HyperTheme.shapes.medium,
             verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.extraSmall),
         ) {

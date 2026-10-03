@@ -12,9 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperIcon
-import hyper_ui.HyperIconButton
 import hyper_ui.HyperText
 import hyper_ui.HyperTheme
 import priv.kit.ui.PrivilegeUiScreenScope
@@ -30,7 +28,7 @@ internal fun PrivilegeTopBar(onBack: () -> Unit, backEnabled: Boolean = true) {
     ) {
         val backDescription = stringResource(R.string.priv_ui_nav_back)
         PrivilegeIconTooltip(text = backDescription, modifier = Modifier) {
-            HyperIconButton(enabled = backEnabled, onClick = onBack) {
+            HyperButton(enabled = backEnabled, onClick = onBack, type = "icon") {
                 HyperIcon(
                     imageVector = PrivilegeUiIcons.ArrowBack,
                     contentDescription = backDescription,
@@ -61,7 +59,7 @@ internal fun PrivilegeUiScreenScope.AuthorizationModeTabs() {
             HyperButton(
                 enabled = item.enabled,
                 onClick = { actions.selectStartupMode(item.mode) },
-                variant = if (item.selected) HyperButtonVariant.Filled else HyperButtonVariant.Ghost,
+                type = if (item.selected) "filled" else "ghost",
             ) {
                 HyperText(
                     text = stringResource(item.mode.labelRes()),

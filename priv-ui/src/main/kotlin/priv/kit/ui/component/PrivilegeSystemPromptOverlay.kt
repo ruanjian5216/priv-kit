@@ -26,9 +26,9 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import hyper_ui.HyperCard
+import hyper_ui.HyperCardColors
 import hyper_ui.HyperColors
-import hyper_ui.HyperPanel
-import hyper_ui.HyperPanelColors
 import hyper_ui.HyperText
 import hyper_ui.HyperTheme
 import hyper_ui.LocalHyperContentColor
@@ -79,14 +79,14 @@ internal fun PrivilegeSystemPromptOverlay(
 @Composable
 private fun PrivilegeSystemPromptCard(prompt: PrivilegeUiSystemPrompt) {
     CompositionLocalProvider(LocalHyperContentColor provides HyperColors.pageBackground) {
-        HyperPanel(
+        HyperCard(
             modifier = Modifier
                 .widthIn(max = PROMPT_MAX_WIDTH)
                 .fillMaxWidth()
                 .semantics(mergeDescendants = true) {
                     liveRegion = LiveRegionMode.Polite
                 },
-            colors = HyperPanelColors(containerColor = HyperColors.primaryText),
+            colors = HyperCardColors(containerColor = HyperColors.primaryText),
             shape = HyperTheme.shapes.medium,
             elevation = 6.dp,
             contentModifier = Modifier.padding(

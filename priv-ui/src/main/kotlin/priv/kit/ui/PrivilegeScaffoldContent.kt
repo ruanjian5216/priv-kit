@@ -128,11 +128,11 @@ internal fun PrivilegeScaffoldContent(
 
 @Composable
 private fun HyperFeedbackBanner(message: String, modifier: Modifier = Modifier) {
-    hyper_ui.HyperPanel(
+    hyper_ui.HyperCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = PrivilegeUiSpacing.large, vertical = PrivilegeUiSpacing.medium),
-        colors = hyper_ui.HyperPanelColors(containerColor = HyperColors.primaryText),
+        colors = hyper_ui.HyperCardColors(containerColor = HyperColors.primaryText),
         shape = HyperTheme.shapes.medium,
     ) {
         hyper_ui.HyperText(message, color = HyperColors.pageBackground)

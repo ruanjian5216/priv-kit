@@ -6,8 +6,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import hyper_ui.HyperButton
-import hyper_ui.HyperButtonDefaults
-import hyper_ui.HyperButtonVariant
 import hyper_ui.HyperColors
 import hyper_ui.HyperText
 import hyper_ui.HyperTheme
@@ -29,7 +27,7 @@ internal fun PrivilegeUiScreenScope.LocalNetworkPermissionPanel() {
         )
         HyperButton(
             modifier = Modifier.fillMaxWidth(),
-            variant = HyperButtonVariant.Outline,
+            type = "outline",
             enabled = interactionEnabled,
             onClick = actions.requestLocalNetworkPermission,
         ) {
@@ -62,7 +60,7 @@ internal fun PrivilegeUiScreenScope.BatteryOptimizationPromptPanel() {
         )
         HyperButton(
             modifier = Modifier.fillMaxWidth(),
-            variant = HyperButtonVariant.Outline,
+            type = "outline",
             enabled = interactionEnabled,
             onClick = {
                 if (
