@@ -33,13 +33,15 @@ plugins {
 private object Cfg {
     const val compileSdk = 37
     const val buildToolsVersion = "37.0.0"
-    const val ndkVersion = "30.0.14904198"
     const val cmakeVersion = "4.1.2"
     const val minSdk = 30
     val javaTargetVersion = JavaVersion.VERSION_11
     val kotlinJvmTarget = JvmTarget.fromTarget(javaTargetVersion.majorVersion)
     val kotlinLanguageVersion = KotlinVersion.KOTLIN_2_2
 }
+
+// 在根项目读取版本目录，再交给各模块的统一 Android 配置。
+val androidNdkVersion = libs.versions.ndk.get()
 
 private val publishedModuleNames = setOf(
     "priv-shared",
@@ -93,7 +95,7 @@ subprojects {
         extensions.getByType(ApplicationExtension::class.java).apply {
             compileSdk = Cfg.compileSdk
             buildToolsVersion = Cfg.buildToolsVersion
-            ndkVersion = Cfg.ndkVersion
+            ndkVersion = androidNdkVersion
 
             defaultConfig {
                 minSdk = Cfg.minSdk
@@ -119,7 +121,7 @@ subprojects {
         extensions.getByType(LibraryExtension::class.java).apply {
             compileSdk = Cfg.compileSdk
             buildToolsVersion = Cfg.buildToolsVersion
-            ndkVersion = Cfg.ndkVersion
+            ndkVersion = androidNdkVersion
 
             defaultConfig {
                 minSdk = Cfg.minSdk

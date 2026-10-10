@@ -1,4 +1,6 @@
 [versions]
+# 各 Android 模块共用此 NDK 版本；与本机已有安装及 skipad 的版本目录保持一致。
+ndk = "28.2.13676358"
 agp = "9.4.0"
 kotlin = "2.4.10"
 compose = "1.11.4"
