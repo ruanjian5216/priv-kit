@@ -1,8 +1,5 @@
 package priv.kit.sample.debug
 
-import hyper_ui.*
-import priv.kit.sample.ui.*
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +39,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hyper_ui.*
 import priv.kit.sample.R
+import priv.kit.sample.ui.*
 
 @Composable
 internal fun SamplePageScaffold(
@@ -125,12 +124,13 @@ private fun DestinationTabs(
         items(PrivilegeSampleDebugDestination.entries, key = { it.titleRes }) { destination ->
             val selected = destination == selectedDestination
             HyperButton(
-                onClick = { onDestinationSelected(destination) },
+                onPressed = { onDestinationSelected(destination) },
                 enabled = !busy || selected,
-                type = if (selected) "filled" else "tonal",
+                colorStyle = if (selected) "primary" else null,
+                type = "filled",
                 size = "large",
                 contentPadding = PaddingValues(horizontal = 16.dp),
-                role = Role.Tab,
+                role = Role.Tab
             ) {
                 HyperText(
                     text = stringResource(destination.titleRes),
@@ -148,10 +148,12 @@ internal fun SampleTopBarAction(
     onClick: () -> Unit,
 ) {
     HyperButton(
-        onClick = onClick,
+        onPressed = onClick,
         enabled = enabled,
         modifier = Modifier.widthIn(min = 104.dp),
         role = Role.Button,
+        colorStyle = "primary",
+        type = "filled"
     ) {
         HyperText(
             text = label,
@@ -303,18 +305,23 @@ internal fun SampleAction(
 ) {
     val type = when (tone) {
         SampleActionTone.Primary -> "filled"
-        SampleActionTone.Secondary -> "outline"
+        SampleActionTone.Secondary -> null
         SampleActionTone.Tonal -> "tonal"
-        SampleActionTone.Destructive -> "danger"
-        SampleActionTone.Neutral -> "ghost"
+        SampleActionTone.Destructive -> "filled"
+        SampleActionTone.Neutral -> null
     }
     HyperButton(
-        onClick = onClick,
+        onPressed = onClick,
         enabled = enabled,
         modifier = modifier.fillMaxWidth(),
         size = "large",
         type = type,
-        role = Role.Button,
+        colorStyle = when (tone) {
+            SampleActionTone.Primary -> "primary"
+            SampleActionTone.Destructive -> "danger"
+            else -> null
+        },
+        role = Role.Button
     ) {
         HyperText(
             text = label,

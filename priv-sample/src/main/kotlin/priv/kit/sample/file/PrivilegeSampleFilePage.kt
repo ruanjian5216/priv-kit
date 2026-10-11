@@ -1,8 +1,5 @@
 package priv.kit.sample.file
 
-import hyper_ui.*
-import priv.kit.sample.ui.*
-
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -29,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import hyper_ui.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.take
@@ -40,6 +38,7 @@ import priv.kit.core.file.PrivilegeFile
 import priv.kit.core.file.PrivilegeFileMetadata
 import priv.kit.sample.R
 import priv.kit.sample.common.toDiagnosticString
+import priv.kit.sample.ui.*
 
 @Composable
 internal fun PrivilegeSampleFilePage(
@@ -133,9 +132,11 @@ internal fun PrivilegeSampleFilePage(
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = actionsEnabled,
-                onClick = {
+                onPressed = {
                     runOperation("Full smoke test", ::runFullSmokeTest)
                 },
+                colorStyle = "primary",
+                type = "filled"
             ) {
                 HyperText(if (busy) stringResource(R.string.sample_running_progress) else stringResource(R.string.sample_run_full_smoke_test))
             }
@@ -170,9 +171,11 @@ internal fun PrivilegeSampleFilePage(
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = actionsEnabled,
-                onClick = {
+                onPressed = {
                     runOperation("Cleanup", ::cleanupTestPaths)
                 },
+                colorStyle = "primary",
+                type = "filled"
             ) {
                 HyperText(stringResource(R.string.sample_delete_test_files_and_directory))
             }
@@ -202,13 +205,13 @@ internal fun PrivilegeSampleFilePage(
             SelectionContainer {
                 HyperText(
                     text = output?.ifBlank { stringResource(R.string.sample_empty) }
-                        ?: stringResource(R.string.sample_file_intro),
+                    ?: stringResource(R.string.sample_file_intro),
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = SampleTheme.colorScheme.surfaceContainerHighest,
-                            shape = RoundedCornerShape(8.dp),
-                        )
+                        color = SampleTheme.colorScheme.surfaceContainerHighest,
+                        shape = RoundedCornerShape(8.dp),
+                    )
                         .padding(16.dp),
                     fontFamily = FontFamily.Monospace,
                     style = SampleTheme.typography.bodySmall,
@@ -227,7 +230,9 @@ private fun FileActionHyperButton(
     HyperButton(
         modifier = Modifier.fillMaxWidth(),
         enabled = enabled,
-        onClick = onClick,
+        onPressed = onClick,
+        colorStyle = "primary",
+        type = "filled"
     ) {
         HyperText(label)
     }

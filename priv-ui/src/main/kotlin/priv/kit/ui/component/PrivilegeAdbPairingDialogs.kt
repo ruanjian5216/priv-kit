@@ -5,53 +5,56 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import hyper_ui.HyperButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import hyper_ui.HyperAlertDialog
+import hyper_ui.HyperButton
 import hyper_ui.HyperColors
 import hyper_ui.HyperText
 import hyper_ui.HyperTextField
 import hyper_ui.HyperTheme
 import priv.kit.ui.PrivilegeUiAdbPairingStatus
 import priv.kit.ui.PrivilegeUiScreenScope
-import priv.kit.ui.adb.pairing.isPrivilegeUiPairingSessionActive
-import priv.kit.ui.adb.pairing.isPrivilegeUiPairingCode
 import priv.kit.ui.R
+import priv.kit.ui.adb.pairing.isPrivilegeUiPairingCode
+import priv.kit.ui.adb.pairing.isPrivilegeUiPairingSessionActive
 
 @Composable
 internal fun PrivilegeUiScreenScope.WirelessAdbPairingNotificationPermissionWarningDialog() {
     HyperAlertDialog(
         visible = true,
-        onDismissRequest = {
+        onClose = {
             if (interactionEnabled) actions.cancelPendingPairingStart()
         },
         dismissOnClickOutside = false,
         title = stringResource(R.string.priv_ui_notification_permission_unavailable_title),
-        bodyContent = {
+        content = {
             HyperText(stringResource(R.string.priv_ui_notification_permission_unavailable_message))
         },
-        actionContent = {
+        actions = {
             HyperButton(
                 enabled = interactionEnabled,
-                onClick = actions.continuePairingWithoutNotification,
+                onPressed = actions.continuePairingWithoutNotification,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(stringResource(R.string.priv_ui_pairing_continue_action))
             }
             HyperButton(
                 enabled = interactionEnabled,
-                onClick = actions.cancelPendingPairingStart,
+                onPressed = actions.cancelPendingPairingStart,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(stringResource(R.string.priv_ui_pairing_cancel_action))
             }
             HyperButton(
                 enabled = interactionEnabled,
-                onClick = {
+                onPressed = {
                     actions.openNotificationSettings()
                 },
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(stringResource(R.string.priv_ui_notification_permission_settings_action))
             }
@@ -75,17 +78,17 @@ internal fun PrivilegeUiScreenScope.WirelessAdbPairingDialog() {
     }
     HyperAlertDialog(
         visible = true,
-        onDismissRequest = ::dismissOrStop,
+        onClose = ::dismissOrStop,
         dismissOnClickOutside = false,
         title = stringResource(R.string.priv_ui_wireless_pair_dialog_title),
-        bodyContent = {
+        content = {
             Column(verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.medium)) {
                 Column(verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.extraSmall)) {
                     HyperText(
                         text = state.pairingText
 
-                            ?.takeIf(String::isNotBlank)
-                            ?: defaultPairingMessage,
+                        ?.takeIf(String::isNotBlank)
+                        ?: defaultPairingMessage,
                         style = HyperTheme.typography.bodyMedium,
                     )
                     HyperText(
@@ -98,7 +101,7 @@ internal fun PrivilegeUiScreenScope.WirelessAdbPairingDialog() {
                     modifier = Modifier.fillMaxWidth(),
                     value = state.pairingCode,
                     enabled = interactionEnabled,
-                    onValueChange = actions.updatePairingCode,
+                    onChanged = actions.updatePairingCode,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.NumberPassword,
                         imeAction = ImeAction.Done,
@@ -110,22 +113,24 @@ internal fun PrivilegeUiScreenScope.WirelessAdbPairingDialog() {
                             }
                         },
                     ),
-                    labelContent = {
+                    label = {
                         HyperText(stringResource(R.string.priv_ui_pairing_code))
                     },
                 )
             }
         },
-        actionContent = {
+        actions = {
             HyperButton(
                 enabled = canSubmit,
-                onClick = actions.submitNotificationPairingCode,
+                onPressed = actions.submitNotificationPairingCode,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(stringResource(R.string.priv_ui_pairing_submit_action))
             }
             HyperButton(
                 enabled = interactionEnabled,
-                onClick = ::dismissOrStop,
+                onPressed = ::dismissOrStop,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(
                     stringResource(

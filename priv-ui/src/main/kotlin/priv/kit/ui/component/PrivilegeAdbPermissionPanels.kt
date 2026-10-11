@@ -27,16 +27,15 @@ internal fun PrivilegeUiScreenScope.LocalNetworkPermissionPanel() {
         )
         HyperButton(
             modifier = Modifier.fillMaxWidth(),
-            type = "outline",
             enabled = interactionEnabled,
-            onClick = actions.requestLocalNetworkPermission,
+            onPressed = actions.requestLocalNetworkPermission,
         ) {
             HyperText(stringResource(
-                if (state.localNetworkPermissionSettingsRequired) {
-                    R.string.priv_ui_local_network_permission_settings_action
-                } else {
-                    R.string.priv_ui_local_network_permission_grant_action
-                },
+                    if (state.localNetworkPermissionSettingsRequired) {
+                        R.string.priv_ui_local_network_permission_settings_action
+                    } else {
+                        R.string.priv_ui_local_network_permission_grant_action
+                    },
             ))
         }
     }
@@ -60,9 +59,8 @@ internal fun PrivilegeUiScreenScope.BatteryOptimizationPromptPanel() {
         )
         HyperButton(
             modifier = Modifier.fillMaxWidth(),
-            type = "outline",
             enabled = interactionEnabled,
-            onClick = {
+            onPressed = {
                 if (
                     actions.canInteract() &&
                     !actions.requestBatteryOptimization()

@@ -11,8 +11,8 @@ internal fun PrivilegeIconTooltip(
     content: @Composable () -> Unit,
 ) {
     HyperTooltip(
-        text = text,
+        message = text,
         modifier = modifier,
-        content = content,
+        child = content,
     )
 }

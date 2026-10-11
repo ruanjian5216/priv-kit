@@ -183,3 +183,7 @@ The preview also accepts `batteryOptimizationExempt` and `localNetworkPermission
 (default `true`). Turning either off shows its ADB prompt card; ADB operations
 remain available without local network permission. Simulated permission requests notify the host through
 `onPermissionsChanged`, keeping the website switches in sync without restarting the session.
+
+## HyperUI source integration
+
+Shared components import the public hyper_ui package. Buttons use onPressed, form values use onChanged, and dialogs use onClose. Icon buttons use HyperButton(type = "icon"); painters are passed through HyperIcon(icon = ...). HyperUI owns presentation only; authorization and Android lifecycle behavior remain in this module.

@@ -1,8 +1,5 @@
 package priv.kit.sample.command
 
-import hyper_ui.*
-import priv.kit.sample.ui.*
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,7 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import hyper_ui.*
 import priv.kit.sample.R
+import priv.kit.sample.ui.*
 
 @Composable
 internal fun PrivilegeSampleCommandPage(
@@ -101,21 +100,27 @@ internal fun PrivilegeSampleCommandPage(
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = canStart,
-                onClick = viewModel::runStreaming,
+                onPressed = viewModel::runStreaming,
+                colorStyle = "primary",
+                type = "filled"
             ) {
                 HyperText(stringResource(R.string.sample_run_with_streaming_output))
             }
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = canStart,
-                onClick = viewModel::runForResult,
+                onPressed = viewModel::runForResult,
+                colorStyle = "primary",
+                type = "filled"
             ) {
                 HyperText(stringResource(R.string.sample_run_and_wait_for_result))
             }
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = state.isRunning,
-                onClick = { viewModel.cancel() },
+                onPressed = { viewModel.cancel() },
+                colorStyle = "primary",
+                type = "filled"
             ) {
                 HyperText(stringResource(R.string.sample_cancel))
             }
@@ -166,9 +171,9 @@ private fun CommandOutput(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = SampleTheme.colorScheme.surfaceContainerHighest,
-                        shape = RoundedCornerShape(8.dp),
-                    )
+                    color = SampleTheme.colorScheme.surfaceContainerHighest,
+                    shape = RoundedCornerShape(8.dp),
+                )
                     .padding(16.dp),
                 fontFamily = FontFamily.Monospace,
                 style = SampleTheme.typography.bodySmall,

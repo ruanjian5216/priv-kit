@@ -28,9 +28,9 @@ internal fun PrivilegeTopBar(onBack: () -> Unit, backEnabled: Boolean = true) {
     ) {
         val backDescription = stringResource(R.string.priv_ui_nav_back)
         PrivilegeIconTooltip(text = backDescription, modifier = Modifier) {
-            HyperButton(enabled = backEnabled, onClick = onBack, type = "icon") {
+            HyperButton(enabled = backEnabled, onPressed = onBack, type = "icon") {
                 HyperIcon(
-                    imageVector = PrivilegeUiIcons.ArrowBack,
+                    icon = PrivilegeUiIcons.ArrowBack,
                     contentDescription = backDescription,
                 )
             }
@@ -58,8 +58,8 @@ internal fun PrivilegeUiScreenScope.AuthorizationModeTabs() {
         items.forEach { item ->
             HyperButton(
                 enabled = item.enabled,
-                onClick = { actions.selectStartupMode(item.mode) },
-                type = if (item.selected) "filled" else "ghost",
+                onPressed = { actions.selectStartupMode(item.mode) },
+                colorStyle = if (item.selected) "primary" else null, type = "filled",
             ) {
                 HyperText(
                     text = stringResource(item.mode.labelRes()),

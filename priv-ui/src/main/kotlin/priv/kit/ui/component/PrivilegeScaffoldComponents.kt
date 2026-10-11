@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import hyper_ui.HyperButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -28,13 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperAlertDialog
+import hyper_ui.HyperButton
 import hyper_ui.HyperButtonDefaults
 import hyper_ui.HyperCard
 import hyper_ui.HyperCardColors
@@ -43,8 +43,8 @@ import hyper_ui.HyperIcon
 import hyper_ui.HyperText
 import hyper_ui.HyperTheme
 import hyper_ui.LocalHyperContentColor
-import priv.kit.ui.PrivilegeUiPermissionRestrictionStatus
 import priv.kit.ui.PrivilegeUiExternalStartSnapshot
+import priv.kit.ui.PrivilegeUiPermissionRestrictionStatus
 import priv.kit.ui.PrivilegeUiRuntimeStartPhase
 import priv.kit.ui.PrivilegeUiRuntimeStatus
 import priv.kit.ui.PrivilegeUiScreenScope
@@ -69,7 +69,7 @@ internal fun Panel(content: @Composable ColumnScope.() -> Unit) {
         colors = HyperCardColors(containerColor = HyperColors.softContainer),
         shape = HyperTheme.shapes.medium,
         verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.medium),
-        content = content,
+        child = content,
     )
 }
 
@@ -81,7 +81,7 @@ internal fun ItemPanel(content: @Composable ColumnScope.() -> Unit) {
         colors = HyperCardColors(containerColor = HyperColors.fieldContainer),
         shape = HyperTheme.shapes.small,
         verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.small),
-        content = content,
+        child = content,
     )
 }
 
@@ -97,9 +97,9 @@ internal fun PrivilegeUiScreenScope.PermissionRestrictionWarning() {
         val permissionText = permissions.joinToString("\n")
         HyperAlertDialog(
             visible = true,
-            onDismissRequest = { permissionsDialogVisible = false },
+            onClose = { permissionsDialogVisible = false },
             title = stringResource(R.string.priv_ui_denied_permissions_title),
-            bodyContent = {
+            content = {
                 Column(verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.medium)) {
                     HyperText(stringResource(R.string.priv_ui_denied_permissions_message))
                     SelectionContainer {
@@ -117,11 +117,11 @@ internal fun PrivilegeUiScreenScope.PermissionRestrictionWarning() {
                     }
                 }
             },
-            actionContent = {
-                HyperButton(onClick = { clipboard.setText(AnnotatedString(permissionText)) }) {
+            actions = {
+                HyperButton(onPressed = { clipboard.setText(AnnotatedString(permissionText)) }, colorStyle = "primary", type = "filled") {
                     HyperText(stringResource(R.string.priv_ui_denied_permissions_copy))
                 }
-                HyperButton(onClick = { permissionsDialogVisible = false }) {
+                HyperButton(onPressed = { permissionsDialogVisible = false }, colorStyle = "primary", type = "filled") {
                     HyperText(stringResource(R.string.priv_ui_denied_permissions_close))
                 }
             },
@@ -143,7 +143,7 @@ internal fun PrivilegeUiScreenScope.PermissionRestrictionWarning() {
             ) {
                 HyperIcon(
                     modifier = Modifier.size(24.dp),
-                    imageVector = PrivilegeUiIcons.Warning,
+                    icon = PrivilegeUiIcons.Warning,
                     contentDescription = null,
                 )
                 Spacer(modifier = Modifier.width(PrivilegeUiSpacing.medium))
@@ -164,14 +164,16 @@ internal fun PrivilegeUiScreenScope.PermissionRestrictionWarning() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 HyperButton(
-                    onClick = onViewPermissionSolutions ?: { uriHandler.openUri(solutionsUrl) },
+                    onPressed = onViewPermissionSolutions ?: { uriHandler.openUri(solutionsUrl) },
                     modifier = Modifier.weight(1f, fill = false),
+                    colorStyle = "primary", type = "filled",
                 ) {
                     HyperText(stringResource(R.string.priv_ui_permission_solutions_view))
                 }
                 HyperButton(
-                    onClick = { permissionsDialogVisible = true },
+                    onPressed = { permissionsDialogVisible = true },
                     modifier = Modifier.weight(1f, fill = false),
+                    colorStyle = "primary", type = "filled",
                 ) {
                     HyperText(stringResource(R.string.priv_ui_denied_permissions_view))
                 }
@@ -218,9 +220,9 @@ internal fun PrivilegeUiScreenScope.AutoRecoveryWarning() {
             contentModifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    horizontal = PrivilegeUiSpacing.large,
-                    vertical = PrivilegeUiSpacing.medium,
-                ),
+                horizontal = PrivilegeUiSpacing.large,
+                vertical = PrivilegeUiSpacing.medium,
+            ),
             colors = HyperCardColors(containerColor = HyperColors.softContainer),
             shape = HyperTheme.shapes.medium,
         ) {
@@ -240,7 +242,8 @@ internal fun PrivilegeUiScreenScope.AutoRecoveryWarning() {
             HyperButton(
                 modifier = Modifier.align(Alignment.End),
                 enabled = interactionEnabled,
-                onClick = actions.disableAutoRecovery,
+                onPressed = actions.disableAutoRecovery,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(
                     text = stringResource(R.string.priv_ui_auto_recovery_disable_action),
@@ -268,23 +271,25 @@ internal fun PrivilegeUiScreenScope.RestartConfirmationDialog() {
     if (state.restartConfirmationTarget == null) return
     HyperAlertDialog(
         visible = true,
-        onDismissRequest = {
+        onClose = {
             if (interactionEnabled) actions.cancelServerRestart()
         },
         title = stringResource(R.string.priv_ui_restart_service_dialog_title),
-        bodyContent = {
+        content = {
             HyperText(stringResource(R.string.priv_ui_restart_service_dialog_message))
         },
-        actionContent = {
+        actions = {
             HyperButton(
                 enabled = interactionEnabled,
-                onClick = actions.confirmServerRestart,
+                onPressed = actions.confirmServerRestart,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(stringResource(R.string.priv_ui_restart_service_confirm))
             }
             HyperButton(
                 enabled = interactionEnabled,
-                onClick = actions.cancelServerRestart,
+                onPressed = actions.cancelServerRestart,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(stringResource(R.string.priv_ui_restart_service_cancel))
             }
@@ -359,27 +364,29 @@ internal fun PrivilegeUiScreenScope.ServiceStatusPanel() {
     if (showStopConfirmation) {
         HyperAlertDialog(
             visible = true,
-            onDismissRequest = {
+            onClose = {
                 if (interactionEnabled) showStopConfirmation = false
             },
             title = stringResource(R.string.priv_ui_stop_service_dialog_title),
-            bodyContent = {
+            content = {
                 HyperText(stringResource(R.string.priv_ui_stop_service_dialog_message))
             },
-            actionContent = {
+            actions = {
                 HyperButton(
                     enabled = interactionEnabled,
-                    onClick = {
+                    onPressed = {
                         if (!actions.canInteract()) return@HyperButton
                         showStopConfirmation = false
                         actions.stopServer()
                     },
+                    colorStyle = "primary", type = "filled",
                 ) {
                     HyperText(stringResource(R.string.priv_ui_stop_service_confirm))
                 }
                 HyperButton(
                     enabled = interactionEnabled,
-                    onClick = { showStopConfirmation = false },
+                    onPressed = { showStopConfirmation = false },
+                    colorStyle = "primary", type = "filled",
                 ) {
                     HyperText(stringResource(R.string.priv_ui_stop_service_cancel))
                 }
@@ -393,11 +400,11 @@ internal fun PrivilegeUiScreenScope.ServiceStatusPanel() {
             contentModifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    start = PrivilegeUiSpacing.large,
-                    top = PrivilegeUiSpacing.medium,
-                    end = PrivilegeUiSpacing.medium,
-                    bottom = PrivilegeUiSpacing.medium,
-                ),
+                start = PrivilegeUiSpacing.large,
+                top = PrivilegeUiSpacing.medium,
+                end = PrivilegeUiSpacing.medium,
+                bottom = PrivilegeUiSpacing.medium,
+            ),
             colors = HyperCardColors(containerColor = background),
             shape = HyperTheme.shapes.medium,
         ) {
@@ -431,17 +438,17 @@ internal fun PrivilegeUiScreenScope.ServiceStatusPanel() {
                     HyperButton(
                         modifier = Modifier.size(PrivilegeUiSize.minimumTouchTarget),
                         enabled = interactionEnabled &&
-                            privilegeUiServiceStatusActionEnabled(
-                                action = action,
-                                busy = state.busy,
-                            ),
+                        privilegeUiServiceStatusActionEnabled(
+                            action = action,
+                            busy = state.busy,
+                        ),
                         type = "icon",
                         colors = HyperButtonDefaults.colors(
-                            type = "icon",
+                            type = null,
                             containerColor = actionContainer,
                             contentColor = actionForeground,
                         ),
-                        onClick = {
+                        onPressed = {
                             if (!actions.canInteract()) return@HyperButton
                             when (action) {
                                 PrivilegeUiServiceStatusAction.STOP -> showStopConfirmation = true
@@ -453,7 +460,7 @@ internal fun PrivilegeUiScreenScope.ServiceStatusPanel() {
                     ) {
                         HyperIcon(
                             modifier = Modifier.size(22.dp),
-                            imageVector = icon,
+                            icon = icon,
                             contentDescription = iconDescription,
                         )
                     }
@@ -526,7 +533,7 @@ internal fun PrivilegeUiScreenScope.StartupLogPanel() {
                     modifier = Modifier.size(PrivilegeUiSize.minimumTouchTarget),
                     enabled = interactionEnabled && lines.isNotEmpty(),
                     type = "icon",
-                    onClick = {
+                    onPressed = {
                         if (!actions.canInteract()) return@HyperButton
                         actions.copyStartupLog()
                         showFeedback(copiedMessage)
@@ -534,9 +541,9 @@ internal fun PrivilegeUiScreenScope.StartupLogPanel() {
                 ) {
                     HyperIcon(
                         modifier = Modifier.size(18.dp),
-                        imageVector = PrivilegeUiIcons.ContentCopy,
+                        icon = PrivilegeUiIcons.ContentCopy,
                         contentDescription = copyLogDescription,
-                        tint = HyperColors.secondaryText,
+                        color = HyperColors.secondaryText,
                     )
                 }
             }
@@ -548,16 +555,16 @@ internal fun PrivilegeUiScreenScope.StartupLogPanel() {
                     modifier = Modifier.size(PrivilegeUiSize.minimumTouchTarget),
                     enabled = interactionEnabled,
                     type = "icon",
-                    onClick = {
+                    onPressed = {
                         if (!actions.canInteract()) return@HyperButton
                         actions.clearStartupLog()
                     },
                 ) {
                     HyperIcon(
                         modifier = Modifier.size(18.dp),
-                        imageVector = PrivilegeUiIcons.Close,
+                        icon = PrivilegeUiIcons.Close,
                         contentDescription = closeLogDescription,
-                        tint = HyperColors.secondaryText,
+                        color = HyperColors.secondaryText,
                     )
                 }
             }

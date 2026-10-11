@@ -9,15 +9,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +29,6 @@ import hyper_ui.HyperButton
 import hyper_ui.HyperCard
 import hyper_ui.HyperCardColors
 import hyper_ui.HyperColors
-import hyper_ui.HyperText
 import hyper_ui.HyperTextField
 import hyper_ui.HyperTheme
 
@@ -116,11 +115,10 @@ fun SampleTextButton(
     enabled: Boolean = true,
     content: @Composable RowScope.() -> Unit,
 ) = HyperButton(
-    onClick = onClick,
+    onPressed = onClick,
     modifier = modifier,
     enabled = enabled,
-    type = "ghost",
-    content = content,
+    content = content
 )
 
 @Composable
@@ -142,15 +140,15 @@ fun SampleOutlinedTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
 ) = HyperTextField(
     value = value,
-    onValueChange = onValueChange,
+    onChanged = onValueChange,
     modifier = modifier,
     enabled = enabled,
     readOnly = readOnly,
     type = if (singleLine) "text" else "textarea",
     rows = minLines,
-    labelContent = label?.let { { it() } },
-    placeholderContent = placeholder,
-    supportingContent = supportingText?.let { { it() } },
+    label = label?.let { { it() } },
+    placeholder = placeholder,
+    supporting = supportingText?.let { { it() } },
     isError = isError,
     keyboardOptions = keyboardOptions,
     keyboardActions = keyboardActions,

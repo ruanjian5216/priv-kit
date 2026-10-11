@@ -47,7 +47,7 @@ internal fun PrivilegeUiScreenScope.ExternalStartPanel() {
                         action = action,
                         startAvailable = interactionEnabled,
                     ),
-                    onClick = {
+                    onPressed = {
                         when (action) {
                             PrivilegeUiStartAction.START -> actions.authorizeOrStartExternal(item.id)
                             PrivilegeUiStartAction.CANCEL -> actions.stopCurrentStart()
@@ -56,6 +56,7 @@ internal fun PrivilegeUiScreenScope.ExternalStartPanel() {
                             -> Unit
                         }
                     },
+                    colorStyle = "primary", type = "filled",
                 ) {
                     HyperText(
                         stringResource(

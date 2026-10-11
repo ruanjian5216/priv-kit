@@ -25,7 +25,7 @@ internal fun PrivilegeUiScreenScope.RootPanel() {
                 action = action,
                 startAvailable = interactionEnabled,
             ),
-            onClick = {
+            onPressed = {
                 when (action) {
                     PrivilegeUiStartAction.START -> actions.startRoot()
                     PrivilegeUiStartAction.CANCEL -> actions.stopCurrentStart()
@@ -34,6 +34,7 @@ internal fun PrivilegeUiScreenScope.RootPanel() {
                     -> Unit
                 }
             },
+            colorStyle = "primary", type = "filled",
         ) {
             HyperText(
                 stringResource(
@@ -68,11 +69,12 @@ internal fun PrivilegeUiScreenScope.ManualShellPanel() {
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = interactionEnabled && !state.busy,
-                onClick = {
+                onPressed = {
                     if (!actions.canInteract()) return@HyperButton
                     actions.copyManualCommand()
                     showFeedback(copiedMessage)
                 },
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(stringResource(R.string.priv_ui_manual_copy_command))
             }

@@ -15,11 +15,11 @@ import hyper_ui.HyperText
 import priv.kit.ui.PrivilegeUiRuntimeStartPhase
 import priv.kit.ui.PrivilegeUiRuntimeStartSource
 import priv.kit.ui.PrivilegeUiScreenScope
+import priv.kit.ui.R
 import priv.kit.ui.adb.PrivilegeUiWirelessAdbPanelStatus
+import priv.kit.ui.adb.pairing.isPrivilegeUiPairingSessionActive
 import priv.kit.ui.adb.privilegeUiWirelessAdbStartActionLabel
 import priv.kit.ui.adb.wirelessAdbPanelStatus
-import priv.kit.ui.adb.pairing.isPrivilegeUiPairingSessionActive
-import priv.kit.ui.R
 
 @Composable
 internal fun PrivilegeUiScreenScope.WirelessAdbSection() {
@@ -66,9 +66,8 @@ internal fun PrivilegeUiScreenScope.WirelessAdbSection() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             HyperButton(
-                type = "outline",
                 enabled = pairingActionEnabled,
-                onClick = actions.startNotificationPairing,
+                onPressed = actions.startNotificationPairing,
             ) {
                 HyperText(stringResource(R.string.priv_ui_wireless_pair_action))
             }
@@ -78,16 +77,17 @@ internal fun PrivilegeUiScreenScope.WirelessAdbSection() {
                     action = startAction,
                     startAvailable = true,
                 ) && adbInteractionEnabled,
-                onClick = {
+                onPressed = {
                     when (startAction) {
                         PrivilegeUiStartAction.START ->
-                            actions.startWirelessAdb()
+                        actions.startWirelessAdb()
                         PrivilegeUiStartAction.CANCEL -> actions.stopCurrentStart()
                         PrivilegeUiStartAction.CANCELLING,
                         PrivilegeUiStartAction.NONE,
                         -> Unit
                     }
                 },
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(
                     stringResource(

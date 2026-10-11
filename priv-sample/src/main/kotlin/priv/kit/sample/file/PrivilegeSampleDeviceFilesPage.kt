@@ -1,8 +1,5 @@
 package priv.kit.sample.file
 
-import hyper_ui.*
-import priv.kit.sample.ui.*
-
 import android.content.Context
 import android.text.format.Formatter
 import androidx.activity.compose.BackHandler
@@ -42,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import hyper_ui.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -50,6 +48,7 @@ import priv.kit.core.file.PrivilegeFileEntry
 import priv.kit.core.file.PrivilegeFileMetadata
 import priv.kit.core.file.PrivilegeFileType
 import priv.kit.sample.R
+import priv.kit.sample.ui.*
 
 @Composable
 internal fun PrivilegeSampleDeviceFilesPage(
@@ -275,9 +274,9 @@ private fun DeviceDirectoryList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            SampleTheme.colorScheme.tertiaryContainer,
-                            RoundedCornerShape(8.dp),
-                        )
+                        SampleTheme.colorScheme.tertiaryContainer,
+                        RoundedCornerShape(8.dp),
+                    )
                         .padding(12.dp),
                     text = stringResource(R.string.sample_directory_truncated),
                     color = SampleTheme.colorScheme.onTertiaryContainer,
@@ -377,11 +376,11 @@ private fun DeviceFileRow(
             },
             leadingContent = {
                 HyperIcon(
-                    painter = painterResource(
+                    icon = painterResource(
                         when (type) {
                             PrivilegeFileType.DIRECTORY -> R.drawable.ic_priv_sample_folder
                             PrivilegeFileType.SYMBOLIC_LINK ->
-                                R.drawable.ic_priv_sample_symbolic_link
+                            R.drawable.ic_priv_sample_symbolic_link
                             null -> R.drawable.ic_priv_sample_unknown_file
                             else -> R.drawable.ic_priv_sample_file
                         },
@@ -392,7 +391,7 @@ private fun DeviceFileRow(
                         null -> stringResource(R.string.sample_file_type_unavailable)
                         else -> stringResource(R.string.sample_file)
                     },
-                    tint = if (isDirectory) {
+                    color = if (isDirectory) {
                         SampleTheme.colorScheme.primary
                     } else {
                         SampleTheme.colorScheme.onSurfaceVariant
@@ -479,8 +478,10 @@ private fun DeviceFilePreviewBody(
         ) {
             PrivilegeSampleFilePreviewMode.entries.forEachIndexed { index, mode ->
                 HyperButton(
-                    onClick = { onSelectMode(mode) },
+                    onPressed = { onSelectMode(mode) },
                     shape = HyperTheme.shapes.small,
+                    colorStyle = "primary",
+                    type = "filled"
                 ) {
                     HyperText(stringResource(mode.labelRes))
                 }
@@ -576,7 +577,7 @@ private fun DeviceFilesStatusPanel(
                 )
             }
             if (actionLabel != null && onAction != null) {
-                HyperButton(onClick = onAction) {
+                HyperButton(onPressed = onAction, colorStyle = "primary", type = "filled") {
                     HyperText(actionLabel)
                 }
             }

@@ -3,18 +3,18 @@ package priv.kit.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import hyper_ui.HyperButton
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import hyper_ui.HyperAlertDialog
+import hyper_ui.HyperButton
 import hyper_ui.HyperText
-import androidx.compose.ui.res.stringResource
 import priv.kit.ui.component.PrivilegeTopBar
 
 /**
@@ -71,16 +71,16 @@ public fun PrivilegePreviewScaffold(
     if (simulation.externalAuthorizationRequested) {
         HyperAlertDialog(
             visible = true,
-            onDismissRequest = simulation::cancelOperation,
+            onClose = simulation::cancelOperation,
             title = stringResource(R.string.priv_ui_external_authorize_start),
-            bodyContent = {
+            content = {
                 HyperText(stringResource(R.string.priv_ui_simulation_external_confirmation))
             },
-            actionContent = {
-                HyperButton(onClick = simulation::confirmExternalAuthorization) {
+            actions = {
+                HyperButton(onPressed = simulation::confirmExternalAuthorization, colorStyle = "primary", type = "filled") {
                     HyperText(stringResource(R.string.priv_ui_ok))
                 }
-                HyperButton(onClick = simulation::cancelOperation) {
+                HyperButton(onPressed = simulation::cancelOperation, colorStyle = "primary", type = "filled") {
                     HyperText(stringResource(R.string.priv_ui_pairing_cancel_action))
                 }
             },

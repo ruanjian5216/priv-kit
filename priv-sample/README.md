@@ -45,3 +45,7 @@ exposes timeout and cancellation controls.
 The Shizuku example keeps third-party binding and AIDL in the app. Its privileged endpoint delegates
 startup execution to `PrivilegeExternalStartupHost`, while the main process uses
 `PrivilegeExternalStartup.runThroughBridge(...)` for pipes, completion, and server handoff.
+
+## HyperUI components
+
+Sample pages use the public hyper_ui package and the controlled component APIs: onPressed for buttons, onChanged for values, and onClose for overlays. Painter-backed icons use HyperIcon(icon = ...). Runtime operations continue through the sample ViewModels and public Privilege APIs.

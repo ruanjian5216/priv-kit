@@ -8,13 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import hyper_ui.HyperButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperAlertDialog
+import hyper_ui.HyperButton
 import hyper_ui.HyperCard
 import hyper_ui.HyperCardColors
 import hyper_ui.HyperColors
@@ -35,27 +35,28 @@ import priv.kit.ui.PrivilegeUiRuntimeStartPhase
 import priv.kit.ui.PrivilegeUiRuntimeStartSource
 import priv.kit.ui.PrivilegeUiScreenScope
 import priv.kit.ui.PrivilegeUiWirelessAdbStatus
+import priv.kit.ui.R
 import priv.kit.ui.adb.PrivilegeUiStaticTcpPanelStatus
 import priv.kit.ui.adb.PrivilegeUiStaticTcpSwitchAction
 import priv.kit.ui.adb.staticTcpActionLabel
-import priv.kit.ui.adb.staticTcpStartActionEnabled
 import priv.kit.ui.adb.staticTcpCommandHelpVisible
 import priv.kit.ui.adb.staticTcpPanelStatus
+import priv.kit.ui.adb.staticTcpStartActionEnabled
 import priv.kit.ui.state.privilegeUiStaticTcpOpenCommand
-import priv.kit.ui.R
 
 @Composable
 internal fun PrivilegeUiScreenScope.TcpAuthorizationFailureDialog() {
     HyperDialog(
         visible = true,
-        onDismissRequest = {},
+        onClose = {},
         dismissOnBackPress = false,
         dismissOnClickOutside = false,
         title = stringResource(R.string.priv_ui_system_prompt_tcp_authorization_title),
-        actionContent = {
+        actions = {
             HyperButton(
                 enabled = interactionEnabled,
-                onClick = actions.dismissTcpAuthorizationFailureDialog,
+                onPressed = actions.dismissTcpAuthorizationFailureDialog,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(stringResource(R.string.priv_ui_ok))
             }
@@ -71,12 +72,12 @@ internal fun PrivilegeUiScreenScope.StaticTcpSwitchConfirmationDialog(
 ) {
     HyperAlertDialog(
         visible = true,
-        onDismissRequest = {
+        onClose = {
             if (interactionEnabled) actions.cancelStaticTcpSwitch()
         },
         dismissOnClickOutside = false,
         title = stringResource(R.string.priv_ui_adb_static_switch_confirmation_title),
-        bodyContent = {
+        content = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.medium),
             ) {
@@ -87,25 +88,27 @@ internal fun PrivilegeUiScreenScope.StaticTcpSwitchConfirmationDialog(
                 AdbConnectionWarning()
             }
         },
-        actionContent = {
+        actions = {
             HyperButton(
                 enabled = interactionEnabled,
-                onClick = actions.confirmStaticTcpSwitch,
+                onPressed = actions.confirmStaticTcpSwitch,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(
                     stringResource(
                         when (action) {
                             PrivilegeUiStaticTcpSwitchAction.START_SERVICE ->
-                                R.string.priv_ui_adb_static_switch_continue_start_action
+                            R.string.priv_ui_adb_static_switch_continue_start_action
                             PrivilegeUiStaticTcpSwitchAction.ENABLE_PORT ->
-                                R.string.priv_ui_adb_static_switch_continue_enable_action
+                            R.string.priv_ui_adb_static_switch_continue_enable_action
                         },
                     ),
                 )
             }
             HyperButton(
                 enabled = interactionEnabled,
-                onClick = actions.cancelStaticTcpSwitch,
+                onPressed = actions.cancelStaticTcpSwitch,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(stringResource(R.string.priv_ui_adb_static_switch_cancel_action))
             }
@@ -180,9 +183,8 @@ internal fun PrivilegeUiScreenScope.StaticTcpAdbSection() {
         if (prepareActionVisible) {
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
-                type = "outline",
                 enabled = prepareActionEnabled,
-                onClick = actions.enableTcpMode,
+                onPressed = actions.enableTcpMode,
             ) {
                 HyperText(stringResource(R.string.priv_ui_adb_static_prepare_action))
             }
@@ -193,9 +195,8 @@ internal fun PrivilegeUiScreenScope.StaticTcpAdbSection() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             HyperButton(
-                type = "outline",
                 enabled = controlActionAvailable && (!state.staticTcp.loaded || staticTcpActive),
-                onClick = {
+                onPressed = {
                     if (!state.staticTcp.loaded) {
                         showFeedback(controlStatusLoadingMessage)
                     } else if (staticTcpActive) {
@@ -208,16 +209,17 @@ internal fun PrivilegeUiScreenScope.StaticTcpAdbSection() {
             HyperButton(
                 modifier = Modifier.weight(1f),
                 enabled = tcpStartActionEnabled,
-                onClick = {
+                onPressed = {
                     when (startAction) {
                         PrivilegeUiStartAction.START ->
-                            actions.startStaticTcpAdb()
+                        actions.startStaticTcpAdb()
                         PrivilegeUiStartAction.CANCEL -> actions.stopCurrentStart()
                         PrivilegeUiStartAction.CANCELLING,
                         PrivilegeUiStartAction.NONE,
                         -> Unit
                     }
                 },
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(
                     stringResource(
@@ -242,11 +244,10 @@ internal fun PrivilegeUiScreenScope.StaticTcpAdbSection() {
                 CommandBlock(staticTcpCommand)
                 HyperButton(
                     modifier = Modifier.fillMaxWidth(),
-                    type = "outline",
                     enabled = adbInteractionEnabled &&
-                        !runtimeStartInProgress &&
-                        !state.busy,
-                    onClick = {
+                    !runtimeStartInProgress &&
+                    !state.busy,
+                    onPressed = {
                         if (!actions.canInteract()) return@HyperButton
                         actions.copyStaticTcpCommand()
                         showFeedback(copiedMessage)
@@ -288,10 +289,10 @@ private fun StaticTcpControlDialog(
 ) {
     HyperAlertDialog(
         visible = true,
-        onDismissRequest = onDismiss,
+        onClose = onDismiss,
         dismissOnClickOutside = false,
         title = stringResource(R.string.priv_ui_adb_static_control_dialog_title),
-        bodyContent = {
+        content = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.medium),
             ) {
@@ -305,20 +306,22 @@ private fun StaticTcpControlDialog(
                 AdbConnectionWarning()
             }
         },
-        actionContent = {
+        actions = {
             HyperButton(
                 enabled = actionEnabled,
-                onClick = onRestart,
+                onPressed = onRestart,
+                colorStyle = "primary", type = "filled",
             ) {
                 HyperText(stringResource(R.string.priv_ui_adb_static_control_restart_action))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(PrivilegeUiSpacing.extraSmall)) {
-                HyperButton(onClick = onDismiss) {
+                HyperButton(onPressed = onDismiss, colorStyle = "primary", type = "filled") {
                     HyperText(stringResource(R.string.priv_ui_adb_static_switch_cancel_action))
                 }
                 HyperButton(
                     enabled = actionEnabled,
-                    onClick = onStop,
+                    onPressed = onStop,
+                    colorStyle = "primary", type = "filled",
                 ) {
                     HyperText(
                         text = stringResource(R.string.priv_ui_adb_static_control_stop_action),
@@ -348,7 +351,7 @@ private fun AdbConnectionWarning() {
             ) {
                 HyperIcon(
                     modifier = Modifier.size(20.dp),
-                    imageVector = PrivilegeUiIcons.Warning,
+                    icon = PrivilegeUiIcons.Warning,
                     contentDescription = null,
                 )
                 Spacer(Modifier.width(PrivilegeUiSpacing.medium))

@@ -1,8 +1,5 @@
 package priv.kit.sample.home
 
-import hyper_ui.*
-import priv.kit.sample.ui.*
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import hyper_ui.*
 import priv.kit.sample.R
+import priv.kit.sample.ui.*
 
 @Composable
 internal fun PrivilegeSampleHomePage(
@@ -66,31 +65,41 @@ internal fun PrivilegeSampleHomePage(
             )
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = onOpenPrivilegeUi,
+                onPressed = onOpenPrivilegeUi,
+                colorStyle = "primary",
+                type = "filled"
             ) {
                 HyperText(stringResource(R.string.sample_open_privilege_ui))
             }
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = onOpenDebug,
+                onPressed = onOpenDebug,
+                colorStyle = "primary",
+                type = "filled"
             ) {
                 HyperText(stringResource(R.string.sample_open_debug_tools))
             }
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = onOpenFileApi,
+                onPressed = onOpenFileApi,
+                colorStyle = "primary",
+                type = "filled"
             ) {
                 HyperText(stringResource(R.string.sample_test_file_api))
             }
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = onOpenDeviceFiles,
+                onPressed = onOpenDeviceFiles,
+                colorStyle = "primary",
+                type = "filled"
             ) {
                 HyperText(stringResource(R.string.sample_browse_device_files))
             }
             HyperButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = onOpenCommandApi,
+                onPressed = onOpenCommandApi,
+                colorStyle = "primary",
+                type = "filled"
             ) {
                 HyperText(stringResource(R.string.sample_test_command_api))
             }
