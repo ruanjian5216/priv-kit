@@ -306,7 +306,7 @@ internal fun SampleAction(
     val type = when (tone) {
         SampleActionTone.Primary -> "filled"
         SampleActionTone.Secondary -> null
-        SampleActionTone.Tonal -> "tonal"
+        SampleActionTone.Tonal -> null
         SampleActionTone.Destructive -> "filled"
         SampleActionTone.Neutral -> null
     }
