@@ -78,7 +78,9 @@ internal fun PrivilegeSampleFilePage(
     }
 
     val actionsEnabled = serverRunning && !busy
+    val pageScrollState = rememberScrollState()
     SampleScaffold(
+        scrollState = pageScrollState,
         containerColor = SampleTheme.colorScheme.background,
         topBar = {
             SampleTopBar(
@@ -99,8 +101,8 @@ internal fun PrivilegeSampleFilePage(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(pageScrollState)
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {

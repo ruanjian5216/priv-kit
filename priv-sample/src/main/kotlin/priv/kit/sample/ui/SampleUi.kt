@@ -1,34 +1,29 @@
 package priv.kit.sample.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import hyper_ui.HyperButton
 import hyper_ui.HyperCard
 import hyper_ui.HyperCardColors
 import hyper_ui.HyperColors
+import hyper_ui.HyperNavBar
+import hyper_ui.HyperNavBarPage
 import hyper_ui.HyperTextField
 import hyper_ui.HyperTheme
 
@@ -67,18 +62,15 @@ object SampleColors {
 @Composable
 fun SampleScaffold(
     modifier: Modifier = Modifier,
+    scrollState: ScrollableState? = null,
     containerColor: Color = HyperColors.pageBackground,
     topBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
     Box(modifier.fillMaxSize().background(containerColor)) {
-        Column(Modifier.fillMaxSize()) {
-            Box(Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))) {
-                topBar()
-            }
-            Box(Modifier.weight(1f).fillMaxWidth()) { content(PaddingValues(0.dp)) }
-        }
+        HyperNavBarPage(scrollState = scrollState, navBar = topBar,
+            bottomSafeArea = false) { padding -> content(padding) }
         snackbarHost()
     }
 }
@@ -97,15 +89,8 @@ fun SampleTopBar(
     actions: @Composable RowScope.() -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        navigationIcon()
-        Box(Modifier.weight(1f)) { title() }
-        Row(content = actions)
-    }
+    HyperNavBar(modifier = modifier, leading = { navigationIcon() },
+        title = title, trailing = { Row(content = actions) })
 }
 
 @Composable

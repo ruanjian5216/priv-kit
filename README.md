@@ -27,3 +27,7 @@ for Android system operations.
     <td><img width="320" height="714" src="https://camo.githubusercontent.com/c0c53fc5f08f4e2093a1222647c02b5fb81875e6017e41752cbdb1cf1a3322ea/687474703a2f2f652e676b642e6c692f38373330646431332d643430352d343365312d613361332d656234653661353333303635" /></td>
   </tr>
 </table>
+
+## 页面导航接入
+
+页面遵循同级 Hyper UI 的[使用规则](../hyper-ui/vitepress/docs/mobile-guidelines.md)与[导航 API](../hyper-ui/vitepress/docs/components/navigation/hyper-nav-bar.md)。主滚动状态交给共用宿主 HyperNavBarPage.scrollState，库内自动监听并驱动 Navbar，不在页面重复计算滚动布尔值或绘制模糊。首屏净空使用库测量的实际导航区高度，并放进滚动内容；原有底部导航和业务状态保存机制保持独立。

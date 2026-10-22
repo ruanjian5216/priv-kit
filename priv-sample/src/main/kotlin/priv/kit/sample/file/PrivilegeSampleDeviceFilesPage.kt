@@ -60,6 +60,15 @@ internal fun PrivilegeSampleDeviceFilesPage(
     val preview = state.preview
     val directoryControls = state.deviceDirectoryControls()
     val snackbarHostState = remember { SampleSnackbarHostState() }
+    val directoryScroll = androidx.compose.foundation.lazy.rememberLazyListState()
+    val textScroll = rememberScrollState()
+    val hexScroll = androidx.compose.foundation.lazy.rememberLazyListState()
+    val activeScroll: androidx.compose.foundation.gestures.ScrollableState =
+        when ((preview as? PrivilegeSampleFilePreview.Content)?.mode) {
+            PrivilegeSampleFilePreviewMode.TEXT -> textScroll
+            PrivilegeSampleFilePreviewMode.HEX -> hexScroll
+            else -> directoryScroll
+        }
 
     LaunchedEffect(serverRunning) {
         viewModel.setServerRunning(serverRunning)
@@ -78,6 +87,7 @@ internal fun PrivilegeSampleDeviceFilesPage(
     }
 
     SampleScaffold(
+        scrollState = activeScroll,
         containerColor = SampleTheme.colorScheme.background,
         snackbarHost = { SampleSnackbarHost(snackbarHostState) },
         topBar = {
@@ -112,6 +122,7 @@ internal fun PrivilegeSampleDeviceFilesPage(
     ) { innerPadding ->
         if (preview == null) {
             DeviceDirectoryContent(
+                listState = directoryScroll,
                 state = state,
                 controls = directoryControls,
                 innerPadding = innerPadding,
@@ -123,6 +134,8 @@ internal fun PrivilegeSampleDeviceFilesPage(
             )
         } else {
             DeviceFilePreviewContent(
+                textScroll = textScroll,
+                hexScroll = hexScroll,
                 preview = preview,
                 innerPadding = innerPadding,
                 onSelectMode = viewModel::selectPreviewMode,
@@ -134,6 +147,7 @@ internal fun PrivilegeSampleDeviceFilesPage(
 
 @Composable
 private fun DeviceDirectoryContent(
+    listState: androidx.compose.foundation.lazy.LazyListState,
     state: PrivilegeSampleDeviceFilesState,
     controls: DeviceDirectoryControls,
     innerPadding: PaddingValues,
@@ -200,6 +214,7 @@ private fun DeviceDirectoryContent(
 
                 state.hasDirectorySnapshot -> key(state.currentDirectory) {
                     DeviceDirectoryList(
+                        listState = listState,
                         state = state,
                         modifier = Modifier.fillMaxSize(),
                         interactionsEnabled = !state.isLoadingDirectory,
@@ -244,6 +259,7 @@ internal fun PrivilegeSampleDeviceFilesState.deviceDirectoryControls(): DeviceDi
 
 @Composable
 private fun DeviceDirectoryList(
+    listState: androidx.compose.foundation.lazy.LazyListState,
     state: PrivilegeSampleDeviceFilesState,
     modifier: Modifier,
     interactionsEnabled: Boolean,
@@ -255,6 +271,7 @@ private fun DeviceDirectoryList(
         SimpleDateFormat(DIRECTORY_ENTRY_DATE_PATTERN, Locale.ROOT)
     }
     LazyColumn(
+        state = listState,
         modifier = modifier.fillMaxWidth(),
         contentPadding = PaddingValues(bottom = 16.dp),
     ) {
@@ -405,6 +422,8 @@ private fun DeviceFileRow(
 
 @Composable
 private fun DeviceFilePreviewContent(
+    textScroll: androidx.compose.foundation.ScrollState,
+    hexScroll: androidx.compose.foundation.lazy.LazyListState,
     preview: PrivilegeSampleFilePreview,
     innerPadding: PaddingValues,
     onSelectMode: (PrivilegeSampleFilePreviewMode) -> Unit,
@@ -431,6 +450,8 @@ private fun DeviceFilePreviewContent(
         )
 
         is PrivilegeSampleFilePreview.Content -> DeviceFilePreviewBody(
+            textScroll = textScroll,
+            hexScroll = hexScroll,
             preview = preview,
             innerPadding = innerPadding,
             onSelectMode = onSelectMode,
@@ -440,6 +461,8 @@ private fun DeviceFilePreviewContent(
 
 @Composable
 private fun DeviceFilePreviewBody(
+    textScroll: androidx.compose.foundation.ScrollState,
+    hexScroll: androidx.compose.foundation.lazy.LazyListState,
     preview: PrivilegeSampleFilePreview.Content,
     innerPadding: PaddingValues,
     onSelectMode: (PrivilegeSampleFilePreviewMode) -> Unit,
@@ -492,7 +515,7 @@ private fun DeviceFilePreviewBody(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(textScroll)
                     .background(
                         SampleTheme.colorScheme.surfaceContainerHighest,
                         RoundedCornerShape(8.dp),
@@ -508,6 +531,7 @@ private fun DeviceFilePreviewBody(
             }
 
             PrivilegeSampleFilePreviewMode.HEX -> LazyColumn(
+                state = hexScroll,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)

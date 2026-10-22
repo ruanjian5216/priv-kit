@@ -23,6 +23,12 @@ pushed to a connected server and apply to the next owner death.
 colors, and full-screen insets. Compose Foundation is the UI dependency; apps using
 `viewModel()` declare `androidx.lifecycle:lifecycle-viewmodel-compose` themselves.
 
+The shared page uses HyperNavBarPage for scroll observation, backdrop sampling, and measured top
+content clearance. A custom topBar slot uses HyperNavBar so its material includes the status-bar
+inset; do not wrap it in another status-bar padding or add an opaque navigation background.
+Navigation blur ends at the Navbar bottom. Runtime polling and authorization state remain in this
+module and are independent of navigation scroll observation.
+
 Create external providers and `PrivilegeUiConfig` once per process, then share the instance between
 the foreground ViewModel and silent startup. These process-scoped objects hold application data,
 not an `Activity`. Provider IDs are persistent keys and stay stable across upgrades.

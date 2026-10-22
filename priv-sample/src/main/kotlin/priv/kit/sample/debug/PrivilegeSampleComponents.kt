@@ -1,7 +1,6 @@
 package priv.kit.sample.debug
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -54,13 +52,15 @@ internal fun SamplePageScaffold(
     content: @Composable () -> Unit,
 ) {
     val colors = SampleTheme.colorScheme
+    val pageScrollState = rememberScrollState()
     SampleScaffold(
+        scrollState = pageScrollState,
         containerColor = colors.background,
         topBar = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(colors.background),
+                    ,
             ) {
                 SampleTopBar(
                     navigationIcon = {
@@ -98,8 +98,8 @@ internal fun SamplePageScaffold(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(pageScrollState)
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
                 .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {

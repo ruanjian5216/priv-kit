@@ -339,3 +339,7 @@ Tailwind 接入网站主 Vite 配置，所有页面共用 `priv-website/tailwind
 pnpm check
 pnpm build
 ```
+
+## Compose navigation surfaces
+
+PrivilegeScaffoldContent and the sample page host use HyperNavBarPage and the container's existing scroll state. Hyper UI owns navigation observation, backdrop sampling, bounded fading and measured top content clearance. Product pages do not duplicate navigation scroll listeners or blur painting. Fixed controls and native file previews retain their own scroll state and runtime behavior; bottom layout is independent of navigation material changes. See the sibling Hyper UI mobile guidelines before changing these hosts.

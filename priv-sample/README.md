@@ -48,4 +48,9 @@ startup execution to `PrivilegeExternalStartupHost`, while the main process uses
 
 ## HyperUI components
 
+SampleScaffold uses HyperNavBarPage and each primary container's existing scroll state. SampleTopBar
+delegates to HyperNavBar; the library observes restored and programmatic scroll positions and
+measures the full navigation area. Top content clearance belongs inside the scroll container;
+pages do not duplicate navigation listeners, blur painting, or status-bar padding.
+
 Sample pages use the public hyper_ui package and the controlled component APIs: onPressed for buttons, onChanged for values, and onClose for overlays. Painter-backed icons use HyperIcon(icon = ...). Runtime operations continue through the sample ViewModels and public Privilege APIs.

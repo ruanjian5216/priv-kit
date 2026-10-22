@@ -34,7 +34,9 @@ internal fun PrivilegeSampleHomePage(
     onOpenCommandApi: () -> Unit,
 ) {
     val colors = SampleTheme.colorScheme
+    val pageScrollState = rememberScrollState()
     SampleScaffold(
+        scrollState = pageScrollState,
         containerColor = colors.background,
         topBar = {
             SampleTopBar(
@@ -51,8 +53,8 @@ internal fun PrivilegeSampleHomePage(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(pageScrollState)
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {

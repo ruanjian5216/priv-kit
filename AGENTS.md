@@ -74,3 +74,11 @@ their versions declared as caret (`^`) ranges in the default `catalog` in
 `pnpm-workspace.yaml`. Keep internal package links as `workspace:*`.
 Update the root manifest, catalog, and `pnpm-lock.yaml` together when changing
 dependencies.
+
+## 导航与 Hyper UI 接入约束
+
+- UI 修改前先读同级库的[业务使用规则](../hyper-ui/vitepress/docs/mobile-guidelines.md)、[设计基线](../hyper-ui/vitepress/docs/style-reference.md)与相关组件 API，使用当前本地源码接口。
+- Navbar 的滚动监听、采样、模糊和渐隐由 UI 库实现。共用页面宿主向 HyperNavBarPage.scrollState 提供主 ScrollState/LazyListState/LazyGridState，Navbar 自动读取库内作用域；不在各页面重复计算导航 scrolledUnder、添加导航专用 derivedStateOf/snapshotFlow、累计手势位移或复制模糊绘制。
+- 首屏顶部净空由库测量实际导航区后提供。LazyColumn/LazyGrid 放入 contentPadding；普通 verticalScroll 的 padding 位于滚动容器内。禁止固定顶部占位截断采样、重复状态栏安全区、实色导航底板或业务裁切。
+- 固定筛选/搜索区归入共用宿主的导航前景，正文仍可滚过导航后方。系统栏画布使用统一页面背景，卡片使用库内表面与阴影。
+- 原有底栏高度、边距、安全区、正文底部留白和滚动范围不得因顶部修正改变。非滚动的播放画面、原生编辑视口及业务自身的位置保存/查询监听不属于导航重复代码，不擅自删除。

@@ -34,7 +34,9 @@ internal fun PrivilegeSampleCommandPage(
     val state = viewModel.state
     val canStart = serverRunning && !state.isRunning
 
+    val pageScrollState = rememberScrollState()
     SampleScaffold(
+        scrollState = pageScrollState,
         containerColor = SampleTheme.colorScheme.background,
         topBar = {
             SampleTopBar(
@@ -55,8 +57,8 @@ internal fun PrivilegeSampleCommandPage(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(pageScrollState)
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
