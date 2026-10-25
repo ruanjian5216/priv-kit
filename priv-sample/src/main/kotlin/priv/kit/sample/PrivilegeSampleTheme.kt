@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import hyper_ui.HyperColors
 import hyper_ui.HyperThemeConfig
+import hyper_ui.enableHyperEdgeToEdge
 
 @Composable
 internal fun PrivilegeSampleTheme(
@@ -25,9 +26,7 @@ internal fun PrivilegeSampleTheme(
     if (!view.isInEditMode) {
         SideEffect {
             context.findActivity()?.let { activity ->
-                WindowCompat.setDecorFitsSystemWindows(activity.window, false)
-                activity.window.statusBarColor = background.toArgb()
-                activity.window.navigationBarColor = background.toArgb()
+                activity.enableHyperEdgeToEdge()
                 WindowCompat.getInsetsController(activity.window, view).apply {
                     isAppearanceLightStatusBars = !darkTheme
                     isAppearanceLightNavigationBars = !darkTheme
