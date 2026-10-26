@@ -1,5 +1,8 @@
 package priv.kit.ui
 
+import androidx.compose.foundation.layout.windowInsetsPadding
+import hyper_ui.topBarInsets
+import hyper_ui.HyperTheme
 import android.Manifest
 import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
@@ -237,6 +240,7 @@ public fun PrivilegeScaffold(
                 ?.prompt,
             modifier = Modifier
                 .align(Alignment.TopCenter)
+                .windowInsetsPadding(HyperTheme.topBarInsets)
                 .zIndex(1f)
                 .padding(
                     horizontal = PrivilegeUiSpacing.large,

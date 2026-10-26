@@ -1,6 +1,6 @@
 ## 最新统一全面屏规则
 
-- 遵循上级 Android-project/AGENTS.md：Activity 使用 enableHyperEdgeToEdge()，HyperThemeConfig.useSystemSafeArea = false；移除系统栏、手势条及挖孔安全区留白，保留 IME 避让和业务组件高度。此前保留系统安全区的条款以本条为准。
+- 遵循上级 Android-project/AGENTS.md：Activity 使用 enableHyperEdgeToEdge()，HyperThemeConfig.useSystemSafeArea = false；根画布和滚动视口不加系统安全区；HyperNavBar 和固定顶部操作容器 统一保护顶部操作区一次，首屏正文净空放在滚动内容内部，上滑可进入状态栏；保留 IME 避让和业务组件高度。此前保留系统安全区的条款以本条为准。
 
 # Priv Kit repository guidance
 
