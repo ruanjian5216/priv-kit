@@ -128,7 +128,6 @@ private fun DestinationTabs(
                 enabled = !busy || selected,
                 colorStyle = if (selected) "primary" else null,
                 type = "filled",
-                size = "large",
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 role = Role.Tab
             ) {
@@ -314,7 +313,6 @@ internal fun SampleAction(
         onPressed = onClick,
         enabled = enabled,
         modifier = modifier.fillMaxWidth(),
-        size = "large",
         type = type,
         colorStyle = when (tone) {
             SampleActionTone.Primary -> "primary"

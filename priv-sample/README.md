@@ -48,6 +48,8 @@ startup execution to `PrivilegeExternalStartupHost`, while the main process uses
 
 ## HyperUI components
 
+The device-file directory and text/hexadecimal preview use an overlay host for the connection status and path controls. Their measured clearance, including the navigation area, is passed to LazyColumn.contentPadding or placed inside the text scroll container. The content viewport stays full screen and can scroll behind the status bar; no toolbar-height padding is applied outside the list.
+
 SampleScaffold uses HyperNavBarPage and each primary container's existing scroll state. SampleTopBar
 delegates to HyperNavBar; the library observes restored and programmatic scroll positions and
 measures the full navigation area. Top content clearance belongs inside the scroll container;

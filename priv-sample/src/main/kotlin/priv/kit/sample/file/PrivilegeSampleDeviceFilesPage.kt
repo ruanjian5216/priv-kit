@@ -158,12 +158,9 @@ private fun DeviceDirectoryContent(
     onRetry: () -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .padding(horizontal = 16.dp),
-    ) {
+    // 操作区覆盖全屏目录列表，实测净空进入列表内容而非视口外层。
+    hyper_ui.HyperScaffold(modifier = Modifier.fillMaxSize(), topBar = {
+      Column(Modifier.fillMaxWidth().padding(innerPadding).padding(horizontal = 16.dp)) {
         HyperText(
             modifier = Modifier.padding(top = 8.dp),
             text = if (state.serverRunning) stringResource(R.string.sample_server_connected) else stringResource(R.string.sample_server_disconnected),
@@ -200,10 +197,10 @@ private fun DeviceDirectoryContent(
             ),
         )
 
+      }
+    }) { contentPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         ) {
             when {
                 !state.serverRunning -> DeviceFilesStatusPanel(
@@ -216,6 +213,7 @@ private fun DeviceDirectoryContent(
                     DeviceDirectoryList(
                         listState = listState,
                         state = state,
+                        contentPadding = contentPadding,
                         modifier = Modifier.fillMaxSize(),
                         interactionsEnabled = !state.isLoadingDirectory,
                         onOpenParent = onOpenParent,
@@ -261,6 +259,7 @@ internal fun PrivilegeSampleDeviceFilesState.deviceDirectoryControls(): DeviceDi
 private fun DeviceDirectoryList(
     listState: androidx.compose.foundation.lazy.LazyListState,
     state: PrivilegeSampleDeviceFilesState,
+    contentPadding: PaddingValues,
     modifier: Modifier,
     interactionsEnabled: Boolean,
     onOpenParent: () -> Unit,
@@ -273,7 +272,8 @@ private fun DeviceDirectoryList(
     LazyColumn(
         state = listState,
         modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(bottom = 16.dp),
+        contentPadding = PaddingValues(top = contentPadding.calculateTopPadding(),
+            bottom = contentPadding.calculateBottomPadding() + 16.dp),
     ) {
         item(key = PARENT_ENTRY_KEY, contentType = PrivilegeFileType.DIRECTORY) {
             DeviceFileRow(
@@ -472,13 +472,9 @@ private fun DeviceFilePreviewBody(
         preview.bytes.toString(Charsets.UTF_8).removePrefix(UTF8_BOM)
     }
     val hexRowCount = preview.bytes.hexRowCount()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
+    hyper_ui.HyperScaffold(modifier = Modifier.fillMaxSize(), topBar = {
+      Column(Modifier.fillMaxWidth().padding(innerPadding).padding(horizontal = 16.dp, vertical = 12.dp),
+          verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SelectionContainer {
             HyperText(
                 text = preview.absolutePath,
@@ -510,12 +506,15 @@ private fun DeviceFilePreviewBody(
                 }
             }
         }
+      }
+    }) { contentPadding ->
+      Box(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         when (preview.mode) {
             PrivilegeSampleFilePreviewMode.TEXT -> SelectionContainer(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                    .fillMaxSize()
                     .verticalScroll(textScroll)
+                    .padding(contentPadding)
                     .background(
                         SampleTheme.colorScheme.surfaceContainerHighest,
                         RoundedCornerShape(8.dp),
@@ -533,13 +532,14 @@ private fun DeviceFilePreviewBody(
             PrivilegeSampleFilePreviewMode.HEX -> LazyColumn(
                 state = hexScroll,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                    .fillMaxSize()
                     .background(
                         SampleTheme.colorScheme.surfaceContainerHighest,
                         RoundedCornerShape(8.dp),
                     ),
-                contentPadding = PaddingValues(12.dp),
+                contentPadding = PaddingValues(start = 12.dp, end = 12.dp,
+                    top = contentPadding.calculateTopPadding() + 12.dp,
+                    bottom = contentPadding.calculateBottomPadding() + 12.dp),
             ) {
                 if (hexRowCount == 0) {
                     item { HyperText(stringResource(R.string.sample_empty), fontFamily = FontFamily.Monospace) }
@@ -558,6 +558,7 @@ private fun DeviceFilePreviewBody(
                 }
             }
         }
+      }
     }
 }
 
